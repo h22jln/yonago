@@ -533,6 +533,20 @@ body{background:var(--paper)}
 .route-illustration .pin-focus{font-size:12px}.route-illustration .pin-delete{border:0;background:transparent;color:var(--blue-dark);font-size:11px;cursor:pointer}
 .route-illustration .map-status{font-size:11px;line-height:1.5}
 @media(max-width:700px){.route-illustration{max-width:460px;margin-inline:auto}.route-paper{margin-inline:20px}.sketch-stop strong{font-size:14px}}
+
+/* Geographic sketch map: relative position, coastline and roads without map tiles. */
+.day-layout{display:grid;grid-template-columns:1fr;gap:30px}
+.day-side{grid-column:1;grid-row:1}.timeline{grid-column:1;grid-row:2}
+.day-banner{margin-bottom:16px}
+.route-illustration{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(250px,.7fr);align-items:start;background:#fbfaf6;border-radius:12px}
+.sketch-heading{grid-column:1/-1;padding:18px 22px 12px}
+.route-paper.geo-map{grid-column:1;position:relative;height:auto;min-height:0;margin:0 0 16px 16px;border:1px solid #e0e3d8;border-radius:8px;overflow:hidden;background:#f1f0e8}
+.geo-map svg{display:block;width:100%;height:auto;aspect-ratio:12/7}
+.map-legend{grid-column:2;grid-row:2;list-style:none;display:grid;gap:0;align-content:start;margin:0;padding:8px 16px 12px 18px}
+.map-legend li{display:flex;align-items:baseline;gap:9px;padding:8px 0;border-bottom:1px solid var(--rule);font-size:12px;line-height:1.35;font-weight:650}
+.map-legend li span{color:var(--blue-dark);font-size:10px;font-weight:800;letter-spacing:.04em;flex:none}
+.route-illustration .map-side{grid-column:1/-1;border-top:1px solid var(--rule)}
+@media(max-width:700px){.day-layout{display:flex;flex-direction:column;gap:18px}.route-illustration{display:block;max-width:none}.route-paper.geo-map{margin:0 12px 10px}.map-legend{grid-template-columns:1fr 1fr;gap:0 12px;padding:4px 16px 12px}.map-legend li{font-size:11px}.geo-map svg{aspect-ratio:12/7}}
 </style></head><body><a class="skip-link" href="#app">일정으로 바로 가기</a>
 <header class="site-head"><div class="shell top">
   <a class="brand" href="#cover" aria-label="요나고 플래너 표지">yonago<span>.note</span></a>
@@ -653,23 +667,35 @@ function renderOverview() {
 }
 
 const routeSketches = [
-  ['요나고 공항','요나고역','호텔 체크인','TSUTAYA · LOFT','이온 요나고역앞','요나고 판타지아'],
-  ['요나고 시내','요나고 공항 합류','숙소 체크인','저녁 식사','요나고 판타지아','마치나카 크리스털'],
-  ['요나고역','이즈모시역','이즈모타이샤','신몬도리','이나사 해변 (선택)','요나고역','저녁 식사','MEGA 돈키호테'],
-  ['요나고역','사카이미나토','미즈키 시게루 로드','유메미나토타워','요나고역 환승','하나카이로','요나고역'],
-  ['숙소 체크아웃','요나고 쇼핑','요나고역','요나고 공항','한국 도착']
+  {bounds:[133.20,133.39,35.40,35.52],points:[['요나고 공항',35.4922,133.2360],['요나고역',35.423,133.337],['호텔',35.430,133.339],['TSUTAYA',35.4463,133.3491],['LOFT',35.4405,133.3412],['이온 요나고역앞',35.4228,133.3329],['판타지아',35.422,133.331]]},
+  {bounds:[133.20,133.39,35.40,35.52],points:[['요나고 시내',35.434,133.335],['요나고 공항',35.4922,133.2360],['요나고역',35.423,133.337],['숙소',35.430,133.339],['판타지아',35.422,133.331],['마치나카',35.434,133.330]]},
+  {bounds:[132.62,133.40,35.31,35.48],points:[['요나고역',35.423,133.337],['이즈모시역',35.361,132.756],['이즈모타이샤',35.402,132.685],['신몬도리',35.396,132.687],['이나사 해변 · 선택',35.399,132.667],['이즈모시역',35.361,132.756],['요나고역',35.423,133.337],['MEGA 돈키호테',35.443,133.327]]},
+  {bounds:[133.15,133.42,35.30,35.57],points:[['요나고역',35.423,133.337],['사카이미나토역',35.545,133.231],['미즈키 시게루 로드',35.548,133.240],['유메미나토타워',35.522,133.269],['요나고역',35.423,133.337],['하나카이로',35.336,133.382],['요나고역',35.423,133.337]]},
+  {bounds:[133.20,133.39,35.40,35.52],points:[['숙소',35.430,133.339],['요나고 쇼핑',35.435,133.337],['요나고역',35.423,133.337],['요나고 공항',35.4922,133.2360]]}
 ];
 const sketchCenters = [[35.4333,133.3333],[35.4333,133.3333],[35.367,132.755],[35.505,133.238],[35.4333,133.3333]];
 function renderMap(){
-  const stops = routeSketches[day];
-  const points = stops.map((_,i)=>({x:i%3===1?88:i%3===2?60:36,y:36+i*86}));
-  const height=points.at(-1).y+42;
-  const line=points.map((p,i)=>i?`C ${points[i-1].x+16} ${points[i-1].y+34}, ${p.x-16} ${p.y-34}, ${p.x} ${p.y}`:`M ${p.x} ${p.y}`).join(' ');
-  return `<section class="map-layout route-illustration" aria-label="${esc(DATA.days[day].day)} 그림 동선도">
-    <div class="sketch-heading"><span>ROUTE · ${String(day+1).padStart(2,'0')}</span><h3>이날의 동선</h3><p>실제 거리와 비율은 반영하지 않은 순서도</p></div>
-    <div class="route-paper" style="--sketch-height:${height}px"><svg class="route-stroke" viewBox="0 0 300 ${height}" preserveAspectRatio="none" aria-hidden="true"><path d="${line}" fill="none" stroke="#587cdb" stroke-width="2.5" stroke-linecap="round"/><circle cx="${points[0].x}" cy="${points[0].y}" r="7" fill="#d7e0b6" stroke="#253026" stroke-width="2"/><circle cx="${points.at(-1).x}" cy="${points.at(-1).y}" r="7" fill="#253026"/></svg>
-      ${stops.map((name,i)=>`<div class="sketch-stop" style="--x:${points[i].x}px;--y:${points[i].y}px"><span class="sketch-dot" aria-hidden="true"></span><span class="sketch-number">${String(i+1).padStart(2,'0')}</span><strong>${esc(name)}</strong></div>`).join('')}
-    </div>
+  const model=routeSketches[day];
+  const [west,east,south,north]=model.bounds;
+  const points=model.points.map(([name,lat,lng],i)=>({name,i,x:Math.round(48+(lng-west)/(east-west)*624),y:Math.round(30+(north-lat)/(north-south)*350)}));
+  const route=points.map((p,i)=>`${i?'L':'M'} ${p.x} ${p.y}`).join(' ');
+  const scene=day===2?'wide':day===3?'coast':'city';
+  return `<section class="map-layout route-illustration" aria-label="${esc(DATA.days[day].day)} 그림 지도">
+    <div class="sketch-heading"><span>ROUTE · ${String(day+1).padStart(2,'0')}</span><h3>이날의 이동</h3><p>실제 장소의 상대적 위치를 바탕으로 그린 약도</p></div>
+    <div class="route-paper geo-map geo-map--${scene}"><svg viewBox="0 0 720 420" role="img" aria-label="${esc(DATA.days[day].day)} 방문 장소와 이동 동선">
+      <rect width="720" height="420" fill="#f1f0e8"/>
+      <path d="M0 0H720V62C636 48 580 96 494 83C407 69 376 118 297 106C186 88 139 148 0 137Z" fill="#dce8eb"/>
+      <path d="M0 137C139 148 186 88 297 106C376 118 407 69 494 83C580 96 636 48 720 62" fill="none" stroke="#b8cdd1" stroke-width="3"/>
+      <path d="M0 376C135 292 194 319 260 345C392 393 511 305 720 322V420H0Z" fill="#e4e7d7"/>
+      <path d="M-20 220C120 170 229 250 365 214S570 157 740 212M-20 302C129 267 271 315 415 274S602 236 740 263M68 420C156 301 307 276 383 84M419 420C442 318 513 214 652 88" fill="none" stroke="#d7d5c8" stroke-width="8" stroke-linecap="round" opacity=".75"/>
+      <path d="M-20 220C120 170 229 250 365 214S570 157 740 212M-20 302C129 267 271 315 415 274S602 236 740 263M68 420C156 301 307 276 383 84M419 420C442 318 513 214 652 88" fill="none" stroke="#f9f8f0" stroke-width="5" stroke-linecap="round"/>
+      <text x="31" y="48" fill="#7696a3" font-size="17" font-weight="700">동해</text>
+      <text x="619" y="395" fill="#a2ad91" font-size="15" font-weight="700">산지</text>
+      <path d="${route}" fill="none" stroke="#f9f7ef" stroke-width="11" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="${route}" fill="none" stroke="#5279db" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${points.map(p=>`<g transform="translate(${p.x} ${p.y})"><circle r="13" fill="${p.i===0||p.i===points.length-1?'#28342a':'#f9f8f1'}" stroke="#5279db" stroke-width="3"/><text text-anchor="middle" dominant-baseline="central" fill="${p.i===0||p.i===points.length-1?'#f9f8f1':'#28342a'}" font-size="11" font-weight="800">${p.i+1}</text></g>`).join('')}
+    </svg></div>
+    <ol class="map-legend">${points.map(p=>`<li><span>${String(p.i+1).padStart(2,'0')}</span>${esc(p.name)}</li>`).join('')}</ol>
     <div class="map-side"><h4>함께 표시한 장소 <span id="pin-count">0</span></h4><div id="pin-list" class="pin-list"></div><button type="button" id="pin-add">장소 추가</button>
       ${cloudMode ? '<div class="share-actions"><button type="button" id="share-link">공유 링크 복사</button><button type="button" id="pin-reload">새로고침</button></div>' : ''}
       <form id="pin-form" class="pin-form" hidden><label for="pin-name">장소 이름</label><input id="pin-name" name="name" type="text" maxlength="60" required placeholder="장소 이름"><div class="pin-actions"><button type="submit">저장</button><button type="button" id="pin-cancel">취소</button></div></form><p id="map-status" class="map-status" role="status"></p>
