@@ -505,7 +505,35 @@ body{background:var(--paper)}
  .stop summary,.stop--static .stop-row{padding:14px 16px}.stop-route,.airport-transfer,.slot-fact{margin:10px 16px 16px;padding:0 0 0 12px}.shop-list{padding:0 16px 16px}.route,.event{padding:18px}.event:nth-child(n){margin:0}
 }
 @media(prefers-reduced-motion:reduce){.polaroid,.polaroid:nth-child(n){transition:none}}
-</style><link rel="stylesheet" href="leaflet.css"><script src="leaflet.js"></script></head><body><a class="skip-link" href="#app">일정으로 바로 가기</a>
+
+/* Schematic route illustration in place of map tiles. */
+.route-illustration{background:#fbfaf6;border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.sketch-heading{padding:20px 20px 12px;border-bottom:1px solid var(--rule)}
+.sketch-heading span{font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--blue-dark)}
+.sketch-heading h3{margin:4px 0 2px;font-size:24px;letter-spacing:-.06em}
+.sketch-heading p{margin:0;color:var(--muted);font-size:11px;line-height:1.5}
+.route-paper{position:relative;min-height:var(--sketch-height);margin:8px 12px 0;background:radial-gradient(circle at 83% 15%,#d8dfbf 0 3px,transparent 4px),radial-gradient(circle at 13% 61%,#7893df 0 3px,transparent 4px)}
+.route-stroke{position:absolute;inset:0;width:300px;height:100%;max-width:none;overflow:visible}
+.sketch-stop{position:absolute;top:calc(var(--y) - 22px);left:var(--x);display:grid;grid-template-columns:18px 1fr;column-gap:7px;align-items:center;max-width:185px;min-height:44px;padding-left:13px;line-height:1.22}
+.sketch-dot{position:absolute;left:-4px;top:17px;width:9px;height:9px;border-radius:50%;background:var(--blue-dark);border:2px solid #fbfaf6;box-shadow:0 0 0 1px var(--blue-dark)}
+.sketch-number{color:var(--blue-dark);font-size:10px;font-weight:800;letter-spacing:.04em}
+.sketch-stop strong{font-size:13px;font-weight:720;letter-spacing:-.025em;overflow-wrap:anywhere}
+.route-illustration .map-side{padding:16px 20px 20px;border-top:1px solid var(--rule);border-radius:0}
+.route-illustration .map-side h4{margin:0 0 8px;font-size:13px}.route-illustration .map-side h4 span{color:var(--blue-dark)}
+.route-illustration .pin-empty{font-size:12px;color:var(--muted)}
+.route-illustration #pin-add,.route-illustration .share-actions button,.route-illustration .pin-actions button{border:1px solid var(--rule);background:var(--white);color:var(--ink);border-radius:6px;padding:8px 10px;font-size:12px;font-weight:700}
+.route-illustration #pin-add{background:var(--blue-dark);color:#fbfaf6;border-color:var(--blue-dark)}
+.route-illustration .share-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.route-illustration .pin-form{margin-top:12px;padding:12px;border:1px solid var(--rule);border-radius:8px;background:#f5f4ee}
+.route-illustration .pin-form[hidden]{display:none}
+.route-illustration .pin-form label{display:block;font-size:12px;margin-bottom:5px}
+.route-illustration .pin-form input{width:100%;padding:9px;border:1px solid var(--rule);border-radius:6px;background:#fbfaf6}
+.route-illustration .pin-actions{display:flex;gap:6px;margin-top:8px}
+.route-illustration .pin-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--rule)}
+.route-illustration .pin-focus{font-size:12px}.route-illustration .pin-delete{border:0;background:transparent;color:var(--blue-dark);font-size:11px;cursor:pointer}
+.route-illustration .map-status{font-size:11px;line-height:1.5}
+@media(max-width:700px){.route-illustration{max-width:460px;margin-inline:auto}.route-paper{margin-inline:20px}.sketch-stop strong{font-size:14px}}
+</style></head><body><a class="skip-link" href="#app">일정으로 바로 가기</a>
 <header class="site-head"><div class="shell top">
   <a class="brand" href="#cover" aria-label="요나고 플래너 표지">yonago<span>.note</span></a>
   <nav class="nav" aria-label="여행 플래너 메뉴"><button type="button" data-view="schedule"><span>날짜별 일정</span></button><button type="button" data-view="events"><span>지역 이벤트</span></button><button type="button" data-view="overview"><span>전체 시간표</span></button></nav>
@@ -624,145 +652,61 @@ function renderOverview() {
     <thead><tr><th scope="col">시간</th>${DATA.days.map(date => `<th scope="col">${esc(date.day)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
-function renderMap() {
-  return `<div class="map-layout">
-      <h3 class="map-heading">이날의 지도</h3>
-      <div id="trip-map" role="application" aria-label="${esc(DATA.days[day].day)} 여행 지도"></div>
-      <div class="map-side">
-        <p class="map-help">지도를 눌러 핀을 추가하세요.</p>
-        ${cloudMode ? '<div class="share-actions"><button type="button" id="share-link">공유 링크 복사</button><button type="button" id="pin-reload">핀 새로고침</button></div>' : ''}
-        <form id="pin-form" class="pin-form" hidden>
-          <h3>핀 추가</h3>
-          <label for="pin-name">장소 이름</label>
-          <input id="pin-name" name="name" type="text" maxlength="60" required placeholder="예: 요나고역">
-          <div class="pin-actions"><button type="submit">핀 저장</button><button type="button" id="pin-cancel">취소</button></div>
-        </form>
-        <h3>이날의 핀 <span id="pin-count">0</span></h3>
-        <div id="pin-list" class="pin-list"></div>
-        <p id="map-status" class="map-status" role="status"></p>
-      </div>
-    </div>`;
+const routeSketches = [
+  ['요나고 공항','요나고역','호텔 체크인','TSUTAYA · LOFT','이온 요나고역앞','요나고 판타지아'],
+  ['요나고 시내','요나고 공항 합류','숙소 체크인','저녁 식사','요나고 판타지아','마치나카 크리스털'],
+  ['요나고역','이즈모시역','이즈모타이샤','신몬도리','이나사 해변 (선택)','요나고역','저녁 식사','MEGA 돈키호테'],
+  ['요나고역','사카이미나토','미즈키 시게루 로드','유메미나토타워','요나고역 환승','하나카이로','요나고역'],
+  ['숙소 체크아웃','요나고 쇼핑','요나고역','요나고 공항','한국 도착']
+];
+const sketchCenters = [[35.4333,133.3333],[35.4333,133.3333],[35.367,132.755],[35.505,133.238],[35.4333,133.3333]];
+function renderMap(){
+  const stops = routeSketches[day];
+  const points = stops.map((_,i)=>({x:i%3===1?88:i%3===2?60:36,y:36+i*86}));
+  const height=points.at(-1).y+42;
+  const line=points.map((p,i)=>i?`C ${points[i-1].x+16} ${points[i-1].y+34}, ${p.x-16} ${p.y-34}, ${p.x} ${p.y}`:`M ${p.x} ${p.y}`).join(' ');
+  return `<section class="map-layout route-illustration" aria-label="${esc(DATA.days[day].day)} 그림 동선도">
+    <div class="sketch-heading"><span>ROUTE · ${String(day+1).padStart(2,'0')}</span><h3>이날의 동선</h3><p>실제 거리와 비율은 반영하지 않은 순서도</p></div>
+    <div class="route-paper" style="--sketch-height:${height}px"><svg class="route-stroke" viewBox="0 0 300 ${height}" preserveAspectRatio="none" aria-hidden="true"><path d="${line}" fill="none" stroke="#587cdb" stroke-width="2.5" stroke-linecap="round"/><circle cx="${points[0].x}" cy="${points[0].y}" r="7" fill="#d7e0b6" stroke="#253026" stroke-width="2"/><circle cx="${points.at(-1).x}" cy="${points.at(-1).y}" r="7" fill="#253026"/></svg>
+      ${stops.map((name,i)=>`<div class="sketch-stop" style="--x:${points[i].x}px;--y:${points[i].y}px"><span class="sketch-dot" aria-hidden="true"></span><span class="sketch-number">${String(i+1).padStart(2,'0')}</span><strong>${esc(name)}</strong></div>`).join('')}
+    </div>
+    <div class="map-side"><h4>함께 표시한 장소 <span id="pin-count">0</span></h4><div id="pin-list" class="pin-list"></div><button type="button" id="pin-add">장소 추가</button>
+      ${cloudMode ? '<div class="share-actions"><button type="button" id="share-link">공유 링크 복사</button><button type="button" id="pin-reload">새로고침</button></div>' : ''}
+      <form id="pin-form" class="pin-form" hidden><label for="pin-name">장소 이름</label><input id="pin-name" name="name" type="text" maxlength="60" required placeholder="장소 이름"><div class="pin-actions"><button type="submit">저장</button><button type="button" id="pin-cancel">취소</button></div></form><p id="map-status" class="map-status" role="status"></p>
+    </div></section>`;
 }
-function mapStatus(message) {
-  const element = document.getElementById('map-status');
-  if (element) element.textContent = message;
+function mapStatus(message){const el=document.getElementById('map-status');if(el)el.textContent=message;}
+async function loadSharedPins(){
+  if(!cloudMode)return;
+  try{const response=await fetch('/api/pins',{headers:{'x-trip-key':tripKey},cache:'no-store'});const data=await response.json();if(!response.ok)throw new Error(data.error||'장소를 불러오지 못했습니다.');pins=data.pins;refreshPins();mapStatus('');}
+  catch(error){mapStatus(error.message);}
 }
-async function loadSharedPins() {
-  if (!cloudMode) return;
-  try {
-    const response = await fetch('/api/pins', {headers:{'x-trip-key':tripKey}, cache:'no-store'});
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || '핀을 불러오지 못했습니다.');
-    pins = data.pins;
-    refreshPins();
-    mapStatus('');
-  } catch (error) { mapStatus(error.message); }
+async function savePin(pin){
+  if(!cloudMode){pins.push({id:String(Date.now())+'-'+Math.random().toString(36).slice(2),...pin});try{localStorage.setItem(PIN_KEY,JSON.stringify(pins));}catch(_){mapStatus('이 브라우저에서는 장소를 저장할 수 없습니다.');}refreshPins();return true;}
+  try{const response=await fetch('/api/pins',{method:'POST',headers:{'Content-Type':'application/json','x-trip-key':tripKey},body:JSON.stringify(pin)});const data=await response.json();if(!response.ok)throw new Error(data.error||'장소를 저장하지 못했습니다.');pins.push(data.pin);refreshPins();mapStatus('장소가 공유되었습니다.');return true;}
+  catch(error){mapStatus(error.message);return false;}
 }
-async function savePin(pin) {
-  if (!cloudMode) {
-    pins.push({id:String(Date.now()) + '-' + Math.random().toString(36).slice(2), ...pin});
-    try { localStorage.setItem(PIN_KEY, JSON.stringify(pins)); } catch (_) { mapStatus('이 브라우저에서는 핀을 저장할 수 없습니다.'); }
-    refreshPins();
-    return true;
-  }
-  try {
-    const response = await fetch('/api/pins', {method:'POST', headers:{'Content-Type':'application/json','x-trip-key':tripKey}, body:JSON.stringify(pin)});
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || '핀을 저장하지 못했습니다.');
-    pins.push(data.pin);
-    refreshPins();
-    mapStatus('핀이 공유되었습니다.');
-    return true;
-  } catch (error) { mapStatus(error.message); return false; }
+async function deletePin(id){
+  if(cloudMode){try{const response=await fetch('/api/pins?id='+encodeURIComponent(id),{method:'DELETE',headers:{'x-trip-key':tripKey}});const data=await response.json();if(!response.ok)throw new Error(data.error||'장소를 삭제하지 못했습니다.');}catch(error){mapStatus(error.message);return;}}
+  pins=pins.filter(item=>item.id!==id);if(!cloudMode)try{localStorage.setItem(PIN_KEY,JSON.stringify(pins));}catch(_){}refreshPins();
 }
-async function deletePin(id) {
-  if (cloudMode) {
-    try {
-      const response = await fetch('/api/pins?id=' + encodeURIComponent(id), {method:'DELETE', headers:{'x-trip-key':tripKey}});
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || '핀을 삭제하지 못했습니다.');
-    } catch (error) { mapStatus(error.message); return; }
-  }
-  pins = pins.filter(item => item.id !== id);
-  if (!cloudMode) try { localStorage.setItem(PIN_KEY, JSON.stringify(pins)); } catch (_) {}
+function refreshPins(){
+  const list=document.getElementById('pin-list');if(!list)return;
+  const dayPins=pins.filter(pin=>pin.day===day);
+  document.getElementById('pin-count').textContent=String(dayPins.length);
+  list.innerHTML=dayPins.length?dayPins.map(pin=>`<div class="pin-row"><span class="pin-focus"><strong>${esc(pin.name)}</strong></span><button type="button" class="pin-delete" data-delete="${esc(pin.id)}" aria-label="${esc(pin.name)} 삭제">삭제</button></div>`).join(''):'<p class="pin-empty">추가한 장소가 없습니다.</p>';
+  list.querySelectorAll('[data-delete]').forEach(button=>button.onclick=()=>deletePin(button.dataset.delete));
+}
+function initMap(){
+  const form=document.getElementById('pin-form');
+  document.getElementById('pin-add').onclick=()=>{form.hidden=false;document.getElementById('pin-name').focus();};
+  document.getElementById('pin-cancel').onclick=()=>{form.hidden=true;form.reset();};
+  form.onsubmit=async event=>{event.preventDefault();const name=document.getElementById('pin-name').value.trim();if(!name)return;const submit=form.querySelector('[type="submit"]');submit.disabled=true;const [lat,lng]=sketchCenters[day];const saved=await savePin({name,day,lat,lng});submit.disabled=false;if(saved){form.reset();form.hidden=true;}};
   refreshPins();
-}
-function refreshPins() {
-  if (!mapInstance || !pinLayer) return;
-  pinLayer.clearLayers();
-  plannedPlaces.filter(place => place.day === day).forEach(place => {
-    L.circleMarker([place.lat,place.lng], {radius:7,color:'#252b28',weight:2,fillColor:'#f4f3ee',fillOpacity:1}).addTo(pinLayer).bindPopup(`<strong>${esc(place.name)}</strong>`);
-  });
-  const dayPins = pins.filter(pin => pin.day === day);
-  dayPins.forEach(pin => {
-    const marker = L.circleMarker([pin.lat, pin.lng], {radius:8, color:'#244fb6', weight:2, fillColor:'#5f82d8', fillOpacity:1}).addTo(pinLayer);
-    marker.bindPopup(`<strong>${esc(pin.name)}</strong><br>${esc(DATA.days[pin.day]?.day || '')}`);
-  });
-  document.getElementById('pin-count').textContent = String(dayPins.length);
-  document.getElementById('pin-list').innerHTML = dayPins.length ? dayPins.map(pin => `<div class="pin-row"><button type="button" class="pin-focus" data-pin="${esc(pin.id)}"><strong>${esc(pin.name)}</strong></button><button type="button" class="pin-delete" data-delete="${esc(pin.id)}" aria-label="${esc(pin.name)} 핀 삭제">삭제</button></div>`).join('') : '<p class="pin-empty">아직 저장한 핀이 없습니다.</p>';
-  document.querySelectorAll('[data-pin]').forEach(button => button.onclick = () => {
-    const pin = pins.find(item => item.id === button.dataset.pin);
-    if (pin) { mapInstance.setView([pin.lat, pin.lng], 14); }
-  });
-  document.querySelectorAll('[data-delete]').forEach(button => button.onclick = () => deletePin(button.dataset.delete));
-}
-function initMap() {
-  if (typeof L === 'undefined') {
-    document.getElementById('map-status').textContent = '지도를 불러오지 못했습니다. 인터넷 연결을 확인하세요.';
-    return;
-  }
-  const centers = [[35.4333,133.3333],[35.4333,133.3333],[35.367,132.755],[35.505,133.238],[35.4333,133.3333]];
-  mapInstance = L.map('trip-map', {scrollWheelZoom:false}).setView(centers[day], 11);
-  const tiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom:19,
-    attribution:'Sources: Esri, HERE, Garmin, USGS, Intermap, © OpenStreetMap contributors, GIS User Community'
-  }).addTo(mapInstance);
-  let tileErrorShown = false;
-  tiles.on('tileerror', () => {
-    if (tileErrorShown) return;
-    tileErrorShown = true;
-    document.getElementById('map-status').textContent = '지도 배경을 불러오지 못했습니다. 인터넷 연결을 확인하세요.';
-  });
-  pinLayer = L.layerGroup().addTo(mapInstance);
-  mapInstance.on('click', event => {
-    pendingPoint = event.latlng;
-    const form = document.getElementById('pin-form');
-    form.hidden = false;
-    document.getElementById('pin-name').focus();
-  });
-  document.getElementById('pin-cancel').onclick = () => {
-    pendingPoint = null;
-    document.getElementById('pin-form').hidden = true;
-  };
-  document.getElementById('pin-form').onsubmit = async event => {
-    event.preventDefault();
-    if (!pendingPoint) return;
-    const name = document.getElementById('pin-name').value.trim();
-    if (!name) return;
-    const submit = event.target.querySelector('[type="submit"]');
-    submit.disabled = true;
-    const saved = await savePin({name, day, lat:pendingPoint.lat, lng:pendingPoint.lng});
-    submit.disabled = false;
-    if (saved) { pendingPoint = null; event.target.reset(); event.target.hidden = true; }
-  };
-  refreshPins();
-  if (cloudMode) {
-    document.getElementById('share-link').onclick = async () => {
-      const url = location.href.split('#')[0] + '#trip=' + tripKey;
-      try { await navigator.clipboard.writeText(url); mapStatus('공유 링크를 복사했습니다. 링크를 가진 사람은 핀을 수정할 수 있습니다.'); }
-      catch (_) { mapStatus('링크를 복사하지 못했습니다: ' + url); }
-    };
-    document.getElementById('pin-reload').onclick = loadSharedPins;
-    loadSharedPins();
-  }
-  const dayPins = pins.filter(pin => pin.day === day);
-  const visiblePoints = [...plannedPlaces.filter(place => place.day === day), ...dayPins];
-  if (visiblePoints.length) mapInstance.fitBounds(visiblePoints.map(point => [point.lat,point.lng]), {padding:[24,24],maxZoom:14});
-  setTimeout(() => mapInstance?.invalidateSize(), 0);
+  if(cloudMode){document.getElementById('share-link').onclick=async()=>{const url=location.href.split('#')[0]+'#trip='+tripKey;try{await navigator.clipboard.writeText(url);mapStatus('공유 링크를 복사했습니다. 링크를 가진 사람은 장소를 수정할 수 있습니다.');}catch(_){mapStatus('링크를 복사하지 못했습니다: '+url);}};document.getElementById('pin-reload').onclick=loadSharedPins;loadSharedPins();}
 }
 
 function render() {
-  if (mapInstance) { mapInstance.remove(); mapInstance = null; pinLayer = null; }
   const date = DATA.days[day];
   menu.forEach(button => {
     const active = button.dataset.view === view;
