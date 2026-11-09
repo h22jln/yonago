@@ -403,6 +403,21 @@ body{font-size:var(--type-body);font-weight:400;line-height:1.6;letter-spacing:-
 .stop[open] .stop-toggle{transform:rotate(225deg);margin:5px 10px 0}
 .stop-route{margin:0 8px 20px 152px;padding:16px 20px;background:var(--white);border:1px solid var(--rule);font-size:14px;line-height:1.6}
 .stop-route strong{display:block;font-size:14px;font-weight:700}.stop-route p{margin:8px 0 0;color:var(--ink)}.stop-route .stop-route-note{color:var(--muted)}.stop-duration{display:inline-block;margin-top:8px;color:var(--blue-dark);font-weight:650}.stop-route a{display:inline-block;margin-top:12px;color:var(--blue-dark);font-weight:650}.stop-route--empty{color:var(--muted)}
+.airport-transfer{margin:0 8px 20px 152px;padding:20px;background:var(--white);border:1px solid var(--rule);font-size:14px;line-height:1.6}
+.airport-transfer h5{margin:0 0 12px;font-size:16px;line-height:1.4}
+.transfer-table{width:100%;border-collapse:collapse;text-align:left;margin-bottom:20px}
+.transfer-table th,.transfer-table td{padding:8px 10px 8px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.transfer-table th{font-size:12px;color:var(--muted);font-weight:650}
+.transfer-table td:first-child{font-weight:700}
+.transfer-options{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.transfer-option{border-top:2px solid var(--ink);padding-top:12px}
+.transfer-option h6{margin:0 0 8px;font-size:14px}
+.transfer-option p{margin:0 0 8px}
+.transfer-option ol{margin:0;padding-left:20px}
+.transfer-option li{margin:4px 0}
+.transfer-option a{color:var(--blue-dark);font-weight:650}
+.transfer-note{color:var(--muted);font-size:12px;margin:16px 0 0}
+@media(max-width:700px){.airport-transfer{margin:0 0 16px;padding:16px}.transfer-options{grid-template-columns:1fr;gap:16px}.transfer-table{font-size:12px}.transfer-table th,.transfer-table td{padding:8px 6px 8px 0}}
 @media(max-width:700px){.stop summary{grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;padding:16px 4px}.stop summary time{grid-column:1;grid-row:1}.stop summary h4{grid-column:1 / -1;grid-row:2;padding-right:28px}.stop summary .tag{grid-column:2;grid-row:1}.stop-toggle{grid-column:2;grid-row:2;align-self:center;margin-right:8px}.stop-route{margin:0 0 16px;padding:16px}}
 
 .stop--static .stop-row{display:grid;grid-template-columns:132px minmax(0,1fr) auto;align-items:center;gap:12px;padding:20px 8px}
@@ -487,10 +502,22 @@ function renderSchedule(date) {
          const label = /후보|확인|선택|미정/.test(slot.title) ? '<span class="tag">확인 필요</span>' : '';
          if (slot.shops) return `<details class="stop" name="schedule-route"><summary><time>${esc(slot.time)}</time><h4>${esc(slot.title)}</h4><span class="stop-toggle" aria-hidden="true"></span></summary><div class="shop-list">${slot.shops.map(shop => `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.query)}" target="_blank" rel="noopener noreferrer"><span>${esc(shop.name)}</span><small>Google 지도 ↗</small></a>`).join('')}</div></details>`;
          if (!route) return `<article class="stop stop--static"><div class="stop-row"><time>${esc(slot.time)}</time><h4>${esc(slot.title)}</h4>${label}</div></article>`;
-         const transport = `<div class="stop-route"><strong>${esc(route.from)} → ${esc(route.to)}</strong><p>${esc(route.how)}</p>${route.duration ? `<span class="stop-duration">${esc(route.duration)}</span>` : ''}${route.note ? `<p class="stop-route-note">${esc(route.note)}</p>` : ''}${/^https:\/\//.test(route.link) ? `<a href="${esc(route.link)}" target="_blank" rel="noopener noreferrer">공식 안내 열기 ↗</a>` : ''}</div>`;
+         const transport = day === 0 && index === 2 ? renderAirportTransfer() : `<div class="stop-route"><strong>${esc(route.from)} → ${esc(route.to)}</strong><p>${esc(route.how)}</p>${route.duration ? `<span class="stop-duration">${esc(route.duration)}</span>` : ''}${route.note ? `<p class="stop-route-note">${esc(route.note)}</p>` : ''}${/^https:\/\//.test(route.link) ? `<a href="${esc(route.link)}" target="_blank" rel="noopener noreferrer">공식 안내 열기 ↗</a>` : ''}</div>`;
          return `<details class="stop" name="schedule-route"><summary><time>${esc(slot.time)}</time><h4>${esc(slot.title)}</h4>${label}<span class="stop-toggle" aria-hidden="true"></span></summary>${transport}</details>`;
        }).join('')}</div>
     </div>`;
+}
+
+function renderAirportTransfer(){
+  return `<div class="airport-transfer"><h5>공항에서 요나고역</h5>
+    <table class="transfer-table"><thead><tr><th>교통수단</th><th>편도</th><th>소요시간</th><th>특징</th></tr></thead><tbody>
+      <tr><td>공항버스</td><td>640엔</td><td>45분</td><td>1순위</td></tr>
+      <tr><td>JR 사카이선</td><td>240엔</td><td>열차 약 25–30분 + 도보·대기</td><td>400엔 저렴</td></tr>
+    </tbody></table>
+    <div class="transfer-options">
+      <section class="transfer-option"><h6>공항 연락버스</h6><ol><li>입국 후 터미널 밖 버스 승차장으로 이동</li><li>히노마루 공항 연락버스 탑승 · 640엔</li><li>15:50 공항 출발 → 16:35 요나고역 도착</li></ol><p><a href="https://hinomarubus.co.jp/route/airport/" target="_blank" rel="noopener noreferrer">공식 버스 시간표 ↗</a></p></section>
+      <section class="transfer-option"><h6>JR 사카이선</h6><ol><li>연결 통로로 요나고공항역까지 도보 약 5분</li><li>요나고행 열차 탑승 · 240엔</li><li>환승 없이 요나고역 도착</li></ol><p>열차 배차 간격 때문에 대기할 수 있어요.</p><p><a href="https://www.yonago-air.com/access/train" target="_blank" rel="noopener noreferrer">공항 철도 안내 ↗</a></p></section>
+    </div><p class="transfer-note">버스 시각은 2026년 12월 10일 게시 시간표 기준이며 항공편 도착 상황에 따라 달라질 수 있습니다. JR 탑승 전 열차 시각을 확인하세요.</p></div>`;
 }
 
 function renderEvents() {
