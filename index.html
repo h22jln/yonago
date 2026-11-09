@@ -450,6 +450,11 @@ try {
 } catch (_) {}
 let view = 'schedule';
 let day = 0;
+const plannedPlaces = [
+  {day:0,name:'TSUTAYA - Higashifukubara',lat:35.4463331,lng:133.349071},
+  {day:0,name:'Yonago LOFT',lat:35.4405461,lng:133.3411677},
+  {day:0,name:'Village Vanguard - Aeon Yonago Ekimae',lat:35.4227735,lng:133.3328964}
+];
 const routeBySlot = [
   {2:0,3:1,8:2},
   {1:0,5:1,10:2,11:3},
@@ -572,6 +577,9 @@ async function deletePin(id) {
 function refreshPins() {
   if (!mapInstance || !pinLayer) return;
   pinLayer.clearLayers();
+  plannedPlaces.filter(place => place.day === day).forEach(place => {
+    L.circleMarker([place.lat,place.lng], {radius:7,color:'#252b28',weight:2,fillColor:'#f4f3ee',fillOpacity:1}).addTo(pinLayer).bindPopup(`<strong>${esc(place.name)}</strong>`);
+  });
   const dayPins = pins.filter(pin => pin.day === day);
   dayPins.forEach(pin => {
     const marker = L.circleMarker([pin.lat, pin.lng], {radius:8, color:'#244fb6', weight:2, fillColor:'#5f82d8', fillOpacity:1}).addTo(pinLayer);
@@ -635,7 +643,8 @@ function initMap() {
     loadSharedPins();
   }
   const dayPins = pins.filter(pin => pin.day === day);
-  if (dayPins.length) mapInstance.fitBounds(dayPins.map(pin => [pin.lat,pin.lng]), {padding:[24,24],maxZoom:14});
+  const visiblePoints = [...plannedPlaces.filter(place => place.day === day), ...dayPins];
+  if (visiblePoints.length) mapInstance.fitBounds(visiblePoints.map(point => [point.lat,point.lng]), {padding:[24,24],maxZoom:14});
   setTimeout(() => mapInstance?.invalidateSize(), 0);
 }
 
