@@ -547,6 +547,13 @@ body{background:var(--paper)}
 .map-legend li span{color:var(--blue-dark);font-size:10px;font-weight:800;letter-spacing:.04em;flex:none}
 .route-illustration .map-side{grid-column:1/-1;border-top:1px solid var(--rule)}
 @media(max-width:700px){.day-layout{display:flex;flex-direction:column;gap:18px}.route-illustration{display:block;max-width:none}.route-paper.geo-map{margin:0 12px 10px}.map-legend{grid-template-columns:1fr 1fr;gap:0 12px;padding:4px 16px 12px}.map-legend li{font-size:11px}.geo-map svg{aspect-ratio:12/7}}
+
+/* Accurate map geometry with a soft, illustration-like tile treatment. */
+.route-paper.geo-map.map-tiles{height:auto;min-height:0;aspect-ratio:12/7;position:relative;background:#e8ece8;overflow:hidden}
+.tile-image{filter:saturate(.62) sepia(.08) contrast(.96)}
+.map-overlay{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;overflow:visible}
+.map-attribution{position:absolute;right:5px;bottom:4px;padding:2px 5px;background:rgba(251,250,246,.88);font-size:9px;color:#3f4a42}
+@media(max-width:700px){.route-paper.geo-map.map-tiles{aspect-ratio:12/7}}
 </style></head><body><a class="skip-link" href="#app">일정으로 바로 가기</a>
 <header class="site-head"><div class="shell top">
   <a class="brand" href="#cover" aria-label="요나고 플래너 표지">yonago<span>.note</span></a>
@@ -674,27 +681,31 @@ const routeSketches = [
   {bounds:[133.20,133.39,35.40,35.52],points:[['숙소',35.430,133.339],['요나고 쇼핑',35.435,133.337],['요나고역',35.423,133.337],['요나고 공항',35.4922,133.2360]]}
 ];
 const sketchCenters = [[35.4333,133.3333],[35.4333,133.3333],[35.367,132.755],[35.505,133.238],[35.4333,133.3333]];
+function worldPoint(lat,lng,zoom){
+  const scale=256*2**zoom;
+  const sin=Math.sin(lat*Math.PI/180);
+  return {x:(lng+180)/360*scale,y:(.5-Math.log((1+sin)/(1-sin))/(4*Math.PI))*scale};
+}
 function renderMap(){
   const model=routeSketches[day];
+  const zoom=[12,12,10,10,12][day];
   const [west,east,south,north]=model.bounds;
-  const points=model.points.map(([name,lat,lng],i)=>({name,i,x:Math.round(48+(lng-west)/(east-west)*624),y:Math.round(30+(north-lat)/(north-south)*350)}));
+  const center=worldPoint((south+north)/2,(west+east)/2,zoom);
+  const left=center.x-360,top=center.y-210;
+  const points=model.points.map(([name,lat,lng],i)=>{const p=worldPoint(lat,lng,zoom);return{name,i,x:Math.round(p.x-left),y:Math.round(p.y-top)};});
   const route=points.map((p,i)=>`${i?'L':'M'} ${p.x} ${p.y}`).join(' ');
-  const scene=day===2?'wide':day===3?'coast':'city';
-  return `<section class="map-layout route-illustration" aria-label="${esc(DATA.days[day].day)} 그림 지도">
-    <div class="sketch-heading"><span>ROUTE · ${String(day+1).padStart(2,'0')}</span><h3>이날의 이동</h3><p>실제 장소의 상대적 위치를 바탕으로 그린 약도</p></div>
-    <div class="route-paper geo-map geo-map--${scene}"><svg viewBox="0 0 720 420" role="img" aria-label="${esc(DATA.days[day].day)} 방문 장소와 이동 동선">
-      <rect width="720" height="420" fill="#f1f0e8"/>
-      <path d="M0 0H720V62C636 48 580 96 494 83C407 69 376 118 297 106C186 88 139 148 0 137Z" fill="#dce8eb"/>
-      <path d="M0 137C139 148 186 88 297 106C376 118 407 69 494 83C580 96 636 48 720 62" fill="none" stroke="#b8cdd1" stroke-width="3"/>
-      <path d="M0 376C135 292 194 319 260 345C392 393 511 305 720 322V420H0Z" fill="#e4e7d7"/>
-      <path d="M-20 220C120 170 229 250 365 214S570 157 740 212M-20 302C129 267 271 315 415 274S602 236 740 263M68 420C156 301 307 276 383 84M419 420C442 318 513 214 652 88" fill="none" stroke="#d7d5c8" stroke-width="8" stroke-linecap="round" opacity=".75"/>
-      <path d="M-20 220C120 170 229 250 365 214S570 157 740 212M-20 302C129 267 271 315 415 274S602 236 740 263M68 420C156 301 307 276 383 84M419 420C442 318 513 214 652 88" fill="none" stroke="#f9f8f0" stroke-width="5" stroke-linecap="round"/>
-      <text x="31" y="48" fill="#7696a3" font-size="17" font-weight="700">동해</text>
-      <text x="619" y="395" fill="#a2ad91" font-size="15" font-weight="700">산지</text>
-      <path d="${route}" fill="none" stroke="#f9f7ef" stroke-width="11" stroke-linejoin="round" stroke-linecap="round"/>
-      <path d="${route}" fill="none" stroke="#5279db" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
-      ${points.map(p=>`<g transform="translate(${p.x} ${p.y})"><circle r="13" fill="${p.i===0||p.i===points.length-1?'#28342a':'#f9f8f1'}" stroke="#5279db" stroke-width="3"/><text text-anchor="middle" dominant-baseline="central" fill="${p.i===0||p.i===points.length-1?'#f9f8f1':'#28342a'}" font-size="11" font-weight="800">${p.i+1}</text></g>`).join('')}
-    </svg></div>
+  let tiles='';
+  for(let ty=Math.floor(top/256);ty<=Math.floor((top+420)/256);ty++)for(let tx=Math.floor(left/256);tx<=Math.floor((left+720)/256);tx++){
+    const max=2**zoom;if(tx<0||ty<0||tx>=max||ty>=max)continue;
+    tiles+=`<image class="tile-image" href="https://tile.openstreetmap.org/${zoom}/${tx}/${ty}.png" x="${Math.round(tx*256-left)}" y="${Math.round(ty*256-top)}" width="256" height="256"/>`;
+  }
+  return `<section class="map-layout route-illustration" aria-label="${esc(DATA.days[day].day)} 방문 지도">
+    <div class="sketch-heading"><span>ROUTE · ${String(day+1).padStart(2,'0')}</span><h3>이날의 이동</h3><p>지도 위 번호는 방문 순서 · 선은 실제 도로 경로가 아닌 위치 연결</p></div>
+    <div class="route-paper geo-map map-tiles"><svg class="map-overlay" viewBox="0 0 720 420" role="img" aria-label="${esc(DATA.days[day].day)} 장소와 이동 순서">${tiles}
+      <path d="${route}" fill="none" stroke="#f9f8f1" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="${route}" fill="none" stroke="#4c6fd0" stroke-width="4" stroke-dasharray="8 6" stroke-linejoin="round" stroke-linecap="round"/>
+      ${points.map(p=>`<g transform="translate(${p.x} ${p.y})"><circle r="13" fill="${p.i===0||p.i===points.length-1?'#263126':'#f9f8f1'}" stroke="#4c6fd0" stroke-width="3"/><text text-anchor="middle" dominant-baseline="central" fill="${p.i===0||p.i===points.length-1?'#f9f8f1':'#263126'}" font-size="11" font-weight="800">${p.i+1}</text></g>`).join('')}
+    </svg><span class="map-attribution">© OpenStreetMap contributors</span></div>
     <ol class="map-legend">${points.map(p=>`<li><span>${String(p.i+1).padStart(2,'0')}</span>${esc(p.name)}</li>`).join('')}</ol>
     <div class="map-side"><h4>함께 표시한 장소 <span id="pin-count">0</span></h4><div id="pin-list" class="pin-list"></div><button type="button" id="pin-add">장소 추가</button>
       ${cloudMode ? '<div class="share-actions"><button type="button" id="share-link">공유 링크 복사</button><button type="button" id="pin-reload">새로고침</button></div>' : ''}
