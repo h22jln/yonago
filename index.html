@@ -1,0 +1,684 @@
+<!doctype html><html lang="ko" data-type="software"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f6f4eb"><meta name="page-type" content="software"><meta name="site-kind" content="software"><meta property="og:title" content="요나고 여행 플래너"><meta property="og:description" content="2026년 겨울 요나고 4박 5일 일정과 이동 방법을 한곳에서 확인하세요."><title>yonago.diary — 2026 겨울 요나고 여행</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" crossorigin><meta name="description" content="요나고에서 보내는 겨울 4박 5일. 날짜별 일정, 교통편, 지역 이벤트를 한곳에서 확인하세요."><style>
+:root {
+  --paper: #f6f4eb;
+  --white: #fffdf6;
+  --ink: #22261d;
+  --muted: #55594d;
+  --rule: #d5d5c7;
+  --blue: #4266cf;
+  --blue-dark: #2448ac;
+  --olive: #dce0b6;
+  --display: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 78px; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--display); }
+button, input { font: inherit; }
+button { cursor: pointer; }
+a { color: var(--blue-dark); }
+:focus-visible { outline: 2px solid var(--blue-dark); outline-offset: 3px; }
+.shell { width: min(100% - 64px, 1088px); margin-inline: auto; }
+.site-head { position: sticky; z-index: 5; top: 0; border-bottom: 1px solid var(--rule); background: var(--paper); }
+.top { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.brand { display: inline-flex; align-items: baseline; flex: none; gap: 3px; padding: 4px 8px 6px; border-radius: 4px; color: var(--paper); background: var(--ink); font: 800 22px/1 var(--display); letter-spacing: -.08em; text-decoration: none; }
+.brand span { font-weight: 500; color: var(--olive); }
+.nav { display: flex; gap: 4px; }
+.nav button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 0; background: transparent; color: var(--ink); padding: 6px 12px; border-radius: 3px; font-size: 12px; font-weight: 750; }
+.nav button.active, .nav button:hover { background: var(--blue-dark); color: white; }
+.icon { display: inline-block; width: 17px; height: 17px; stroke: currentColor; stroke-width: 1.7; fill: none; flex: none; }
+.issue { font: 750 10px/1.5 var(--display); letter-spacing: .12em; color: var(--muted); text-align: right; }
+.date-dock { margin: 23px 0 0; }
+.day-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding: 4px; border: 1px solid var(--rule); border-radius: 4px; background: #edede3; }
+.day-tabs button { min-height: 44px; border: 0; background: transparent; color: var(--ink); border-radius: 2px; font: 750 14px/1.25 var(--display); }
+.day-tabs button small { font-size: 10px; margin-right: 7px; color: var(--muted); }
+.day-tabs button span { font-size: 11px; margin-left: 3px; }
+.day-tabs button.active { background: var(--blue-dark); color: white; }
+.day-tabs button.active small { color: white; }
+.day-tabs button:hover:not(.active) { background: var(--olive); }
+.meta-line { display: flex; justify-content: space-between; gap: 10px; margin: 9px 0 13px; color: var(--muted); font: 750 10px/1.3 var(--display); letter-spacing: .11em; }
+.meta-line span:last-child { color: var(--blue-dark); }
+.cover { position: relative; border: 1px solid var(--ink); background: var(--white); overflow: hidden; isolation: isolate; }
+.cover-intro { min-height: 132px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 26px; align-items: center; padding: 20px 28px; }
+.kicker { display: block; color: var(--blue-dark); font: 800 10px/1.3 var(--display); letter-spacing: .16em; }
+.cover-intro p { margin: 6px 0 0; font-size: 16px; font-weight: 800; letter-spacing: -.045em; }
+.facts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+.facts span { border: 1px solid var(--rule); background: var(--paper); padding: 5px 8px; font-size: 10px; font-weight: 750; }
+.blue-panel { position: relative; padding: 7px 22px 24px; color: var(--white); background: var(--blue); text-align: center; }
+.blue-panel h1 { position: relative; z-index: 1; margin: 0; font: 800 clamp(65px, 13vw, 170px)/.88 var(--display); letter-spacing: -.102em; white-space: nowrap; }
+.blue-panel h1 span { font-weight: 600; }
+.spark { position: absolute; font-size: 52px; color: var(--olive); line-height: 1; pointer-events: none; }
+.spark.one { top: 24%; left: 4%; transform: rotate(-13deg); }
+.spark.two { right: 3%; bottom: 10%; transform: rotate(13deg); }
+.spark.three { top: 10%; right: 7%; font-size: 26px; color: var(--white); }
+.collage { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; gap: clamp(5px, 2vw, 22px); margin: -2px auto 5px; max-width: 790px; }
+.polaroid { position: relative; flex: 1 1 0; min-width: 0; max-width: 225px; margin: 0; padding: 7px 7px 0; color: var(--ink); background: #fffef8; box-shadow: 1px 5px 12px #1b27683b; }
+.polaroid:nth-child(1) { transform: rotate(-7deg); }
+.polaroid:nth-child(2) { transform: translateY(9px) rotate(5deg); }
+.polaroid:nth-child(3) { transform: rotate(-4deg); }
+.polaroid:nth-child(2)::before { content: ''; position: absolute; top: -7px; left: 36%; width: 38%; height: 13px; background: #d9dfa8d9; transform: rotate(-7deg); z-index: 1; }
+.photo { display: block; width: 100%; aspect-ratio: 1.14; object-fit: cover; background: #293449; }
+.polaroid figcaption { padding: 8px 0 9px; font-size: 12px; font-weight: 800; letter-spacing: -.035em; }
+.cover-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 6px 16px; }
+.cover-bottom small { color: var(--muted); font: 750 10px/1.4 var(--display); letter-spacing: .1em; }
+.jump { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 12px; font-weight: 800; text-underline-offset: 4px; }
+#app { margin-top: 30px; }
+#app:focus { outline: none; }
+.section-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin: 0 0 13px; }
+.section-head h2 { margin: 1px 0 0; font-size: clamp(27px, 4vw, 44px); line-height: 1.13; letter-spacing: -.075em; }
+.section-head p { margin: 7px 0 0; font-size: 12px; color: var(--muted); line-height: 1.55; }
+.section-head .count { align-self: flex-start; background: var(--olive); padding: 4px 6px; border-radius: 2px; font: 800 10px/1.3 var(--display); white-space: nowrap; }
+.day-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 19px; align-items: start; }
+.day-banner { position: relative; background: repeating-linear-gradient(transparent 0 24px, #ddded1 25px 26px), var(--white); border: 1px solid var(--ink); padding: 17px; }
+.day-banner::before { content: ''; position: absolute; top: -6px; right: 18px; width: 55px; height: 12px; background: #a8baffcc; transform: rotate(4deg); }
+.day-banner h3 { margin: 3px 0 4px; font: 850 34px/1.1 var(--display); letter-spacing: -.06em; }
+.day-banner p { margin: 0; font-size: 14px; font-weight: 750; }
+.route-jump { margin-top: 12px; min-height: 44px; border: 0; border-radius: 2px; padding: 6px 12px; background: var(--blue-dark); color: white; font-size: 12px; font-weight: 800; }
+.note { background: #ecefd8; border: 1px solid #cbd0af; color: #3d4933; padding: 12px 14px; font-size: 12px; line-height: 1.75; }
+.day-alert { margin: 8px 0 0; }
+.day-alert a { display: block; color: inherit; font-weight: 800; text-underline-offset: 3px; }
+#trip-note { margin: 24px 0; }
+.timeline, .route-list { display: grid; gap: 8px; }
+.stop, .route, .event { background: var(--white); border: 1px solid var(--rule); border-radius: 3px; padding: 13px 16px; }
+.stop { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; }
+.stop time, .event small { color: var(--blue-dark); font: 800 12px/1.4 var(--display); font-variant-numeric: tabular-nums; letter-spacing: .05em; }
+.stop h4 { grid-column: 1 / -1; margin: 0; font-size: 15px; line-height: 1.5; font-weight: 800; }
+.tag { grid-column: 2; grid-row: 1; align-self: start; color: #373e29; background: var(--olive); padding: 3px 5px; font-size: 9px; font-weight: 750; }
+.fromto { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; font-weight: 850; font-size: 15px; }
+.arrow { color: var(--blue-dark); }
+.route p, .event p { margin: 8px 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+.route .route-note { color: #4a5335; }
+.detail span, .status { display: inline-block; padding: 4px 7px; background: var(--olive); font-size: 11px; font-weight: 750; }
+.route a { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; font-weight: 800; text-underline-offset: 3px; }
+.event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.event h3 { margin: 7px 0; font-size: 16px; }
+.search { min-height: 44px; width: min(100%, 285px); padding: 7px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--white); font-size: 16px; }
+.empty { padding: 20px; color: var(--muted); }
+.overview-scroll { overflow: auto; background: var(--white); border: 1px solid var(--rule); border-radius: 3px; }
+.overview-scroll table { border-collapse: separate; border-spacing: 0; min-width: 850px; width: 100%; font-size: 13px; }
+.overview-scroll th, .overview-scroll td { padding: 13px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.overview-scroll thead th { background: var(--blue-dark); color: white; min-width: 155px; }
+.overview-scroll th:first-child { position: sticky; left: 0; min-width: 70px; background: #e9ecd8; }
+.overview-scroll thead th:first-child { background: var(--blue-dark); }
+.overview-scroll td { border-left: 1px solid var(--rule); line-height: 1.6; }
+.overview-scroll tbody tr:nth-child(even) { background: var(--paper); }
+.footer { display: flex; justify-content: space-between; gap: 8px; border-top: 1px solid var(--rule); padding: 17px 0 26px; color: var(--muted); font: 650 10px/1.5 var(--display); }
+@media(max-width: 700px) {
+  html { scroll-padding-top: 63px; scroll-padding-bottom: 74px; }
+  body { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+  .shell { width: calc(100% - 28px); }
+  .top { min-height: 51px; }
+  .brand { font-size: 20px; }
+  .nav { position: fixed; inset: auto 0 0; z-index: 6; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; padding: 4px 6px calc(4px + env(safe-area-inset-bottom)); border-top: 1px solid var(--rule); background: var(--paper); box-shadow: 0 -3px 12px #25281c0e; }
+  .nav button { flex-direction: column; min-height: 47px; padding: 3px 1px; gap: 3px; font-size: 10px; }
+  .date-dock { margin-top: 13px; }
+  .day-tabs button small { display: block; margin: 0 0 2px; font-size: 9px; }
+  .day-tabs button { font-size: 12px; padding: 2px 0; }
+  .day-tabs button span { font-size: 9px; margin: 0; }
+  .cover-intro { min-height: 0; grid-template-columns: 1fr; gap: 11px; padding: 13px; }
+  .cover-intro p { font-size: 14px; }
+  .facts { justify-content: flex-start; }
+  .facts span { padding: 3px 5px; font-size: 9px; }
+  .blue-panel { padding: 10px 8px 14px; }
+  .blue-panel h1 { font-size: clamp(45px, 14.7vw, 98px); }
+  .collage { gap: 5px; margin: 3px 6px; }
+  .polaroid { padding: 4px 4px 0; }
+  .polaroid figcaption { font-size: 9px; padding: 4px 0; }
+  .spark { font-size: 30px; }
+  .spark.three { display: none; }
+  .cover-bottom { padding: 0 9px; }
+  .cover-bottom small { font-size: 8px; }
+  .jump { font-size: 11px; }
+  #app { margin-top: 20px; }
+  .day-layout { display: flex; flex-direction: column; gap: 11px; }
+  .day-layout > * { width: 100%; }
+  .day-side { order: -1; }
+  .day-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; padding: 9px 10px; }
+  .day-banner h3 { margin: 2px 0; font-size: 22px; }
+  .day-banner p { font-size: 12px; }
+  .route-jump { margin: 0; padding-inline: 8px; }
+  .stop { padding: 10px 11px; }
+  .stop h4 { font-size: 14px; }
+  .event-grid { grid-template-columns: 1fr; }
+  .section-head.with-search { align-items: start; flex-direction: column; gap: 8px; }
+  .search { width: 100%; }
+}
+@media print {
+  body { padding: 0; }
+  .site-head, .date-dock, .cover, .search, .route-jump, .footer { display: none; }
+  .shell { width: 100%; }
+  .stop, .route, .event { break-inside: avoid; }
+  .overview-scroll { overflow: visible; }
+  .overview-scroll table { min-width: 0; font-size: 9px; }
+  .overview-scroll th, .overview-scroll td { min-width: 0 !important; padding: 4px; }
+}
+.date-dock { position: sticky; top: 64px; z-index: 4; padding: 5px 0; background: var(--paper); }
+html { scroll-padding-top: 133px; }
+.date-dock[hidden] { display: none; }
+@media(max-width:700px) {
+  .date-dock { top: 51px; }
+  html { scroll-padding-top: 120px; }
+}
+@media print { .date-dock { display: none; } }
+@media(min-width:701px) {
+  .day-side { grid-column: 2; grid-row: 1; }
+  .timeline { grid-column: 1; grid-row: 1; }
+}
+
+.photo { background-image: url(cover.webp); background-size: 300% auto; background-repeat: no-repeat; }
+.photo-0 { background-position: left center; }
+.photo-1 { background-position: center; }
+.photo-2 { background-position: right center; }
+
+/* Editorial refresh: existing planner data and behavior remain intact. */
+:root { --paper:#f4f3ec; --white:#fffefa; --ink:#202b27; --muted:#55615a; --rule:#cbd3cc; --blue:#164b46; --blue-dark:#123d39; --olive:#dce7da; }
+html { scroll-behavior:smooth; }
+body { font-size:16px; line-height:1.55; }
+.skip-link { position:fixed; left:16px; top:12px; z-index:20; padding:10px 16px; background:var(--ink); color:white; transform:translateY(-160%); }
+.skip-link:focus { transform:translateY(0); }
+.shell { width:min(calc(100% - 64px), 1200px); }
+.site-head { background:rgba(244,243,236,.96); backdrop-filter:blur(12px); }
+.top { min-height:72px; }
+.brand { background:none; color:var(--ink); padding:0; font-size:24px; letter-spacing:-.07em; }
+.brand span { color:var(--blue); }
+.issue { color:var(--blue); }
+.nav { gap:12px; }
+.nav button { font-size:14px; font-weight:650; padding:8px 13px; border-radius:0; transition:background .2s,transform .2s,color .2s; }
+.nav button:hover { transform:translateY(-2px); }
+.nav button:active,.route-jump:active,.day-tabs button:active { transform:translateY(1px); }
+.nav button.active { background:var(--ink); }
+.date-dock { top:72px; margin:0; padding:12px 0; }
+.day-tabs { border-radius:0; gap:0; padding:0; background:transparent; border:0; border-bottom:1px solid var(--rule); }
+.day-tabs button { border-radius:0; min-height:54px; font-size:16px; border-bottom:3px solid transparent; transition:background .2s,transform .2s; }
+.day-tabs button small { font-size:11px; }
+.day-tabs button.active { color:var(--blue-dark); background:transparent; border-bottom-color:var(--blue-dark); }
+.day-tabs button.active small { color:var(--blue-dark); }
+.day-tabs button:hover:not(.active) { background:var(--olive); }
+.meta-line { margin:25px 0 13px; font-size:12px; letter-spacing:.09em; }
+.cover { border:0; background:var(--blue-dark); color:#fff; min-height:min(750px,calc(100svh - 118px)); display:flex; flex-direction:column; }
+.cover-intro { min-height:100px; padding:24px 36px; border-bottom:1px solid rgba(255,255,255,.28); }
+.cover-intro .kicker { color:#c5e4ce; }
+.cover-intro p { font-size:16px; font-weight:500; }
+.facts span { border:1px solid rgba(255,255,255,.4); background:transparent; color:white; font-size:12px; padding:6px 10px; }
+.blue-panel { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 36px 34px; background:var(--blue-dark); text-align:center; }
+.blue-panel h1 { font-size:clamp(54px,7.4vw,112px); line-height:1.02; letter-spacing:-.075em; white-space:normal; font-weight:750; animation:hero-in .7s ease-out both; }
+.blue-panel h1 span { font-weight:450; color:#cce7d2; }
+.cover-lede { margin:24px auto 38px; font-size:clamp(16px,1.5vw,20px); color:#e2ede4; animation:hero-in .75s .12s ease-out both; }
+.spark { display:none; }
+.collage { width:100%; max-width:920px; gap:12px; margin:0; }
+.polaroid,.polaroid:nth-child(n) { max-width:none; padding:0; transform:none; box-shadow:none; overflow:hidden; background:transparent; }
+.polaroid:nth-child(2)::before { display:none; }
+.photo { aspect-ratio:1.65; transition:transform .35s ease; }
+.polaroid:hover .photo { transform:scale(1.025); }
+.cover-bottom { padding:16px 36px; border-top:1px solid rgba(255,255,255,.28); }
+.cover-bottom small { color:#cce0d2; font-size:11px; }
+.jump { color:white; font-size:14px; text-decoration:none; border-bottom:1px solid currentColor; transition:transform .2s; }
+.jump:hover { transform:translateX(3px); }
+#app { margin-top:72px; min-height:50vh; }
+.section-head { margin-bottom:32px; border-bottom:1px solid var(--rule); padding-bottom:20px; }
+.section-head h2 { font-size:clamp(32px,4.3vw,58px); line-height:1.08; }
+.section-head p { font-size:16px; }
+.kicker { font-size:12px; letter-spacing:.12em; }
+.section-head .count { font-size:12px; border-radius:0; padding:7px 10px; }
+.day-layout { grid-template-columns:minmax(0,1.75fr) minmax(280px,.75fr); gap:32px; }
+.day-banner { background:var(--olive); border:0; padding:26px; }
+.day-banner::before { display:none; }
+.day-banner h3 { font-size:38px; }
+.day-banner p { font-size:16px; }
+.route-jump { margin-top:22px; padding:10px 16px; min-height:44px; font-size:14px; border-radius:0; transition:transform .2s,background .2s; }
+.route-jump:hover { transform:translateY(-2px); background:var(--ink); }
+.note { background:#e8ede5; border:0; padding:18px 22px; font-size:15px; }
+.timeline,.route-list { gap:0; }
+.stop,.route,.event { background:transparent; border:0; border-bottom:1px solid var(--rule); border-radius:0; padding:21px 4px; }
+.stop { grid-template-columns:140px minmax(0,1fr) auto; align-items:baseline; gap:12px; }
+.stop time { grid-column:1; font-size:14px; }
+.stop h4 { grid-column:2; font-size:17px; font-weight:650; }
+.tag { grid-column:3; grid-row:1; font-size:11px; }
+.fromto { font-size:19px; }
+.route p,.event p { font-size:15px; }
+.route a { font-size:14px; }
+.event-grid { gap:16px 36px; }
+.event h3 { font-size:20px; }
+.search { border-radius:0; border-color:var(--ink); }
+.overview-scroll { border-radius:0; }
+.overview-scroll th,.overview-scroll td { padding:16px; }
+#trip-note { margin:72px 0 60px; }
+.footer { font-size:12px; padding:24px 0 48px; }
+@keyframes hero-in { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@media (max-width:700px) {
+  html { scroll-padding-top:119px; }
+  .shell { width:calc(100% - 32px); }
+  .top { min-height:56px; }
+  .brand { font-size:23px; }
+  .issue { font-size:9px; }
+  .nav { gap:2px; background:var(--white); }
+  .nav button { font-size:11px; padding:4px 1px; }
+  .date-dock { top:56px; padding:5px 0; }
+  .day-tabs button { min-height:52px; font-size:13px; }
+  .day-tabs button small { font-size:10px; }
+  .meta-line { margin:16px 0 10px; font-size:10px; }
+  .cover { min-height:calc(100svh - 144px); }
+  .cover-intro { padding:18px; gap:8px; }
+  .cover-intro p { font-size:14px; }
+  .facts { gap:4px; }
+  .facts span { font-size:10px; padding:4px 6px; }
+  .blue-panel { padding:35px 16px 24px; }
+  .blue-panel h1 { font-size:clamp(44px,11vw,72px); }
+  .cover-lede { margin:18px 0 28px; font-size:14px; }
+  .collage { gap:5px; }
+  .photo { aspect-ratio:.9; }
+  .cover-bottom { padding:12px 16px; }
+  .cover-bottom small { font-size:10px; }
+  .jump { font-size:12px; white-space:nowrap; }
+  #app { margin-top:42px; }
+  .section-head { margin-bottom:18px; }
+  .section-head h2 { font-size:35px; }
+  .section-head p { font-size:14px; }
+  .day-side { order:-1; }
+  .day-banner { padding:18px; }
+  .day-banner h3 { font-size:26px; }
+  .day-banner p { font-size:14px; }
+  .stop { grid-template-columns:1fr auto; padding:17px 0; }
+  .stop time { grid-column:1; font-size:13px; }
+  .stop h4 { grid-column:1 / -1; grid-row:2; font-size:16px; }
+  .tag { grid-column:2; grid-row:1; }
+  .event-grid { gap:0; }
+  .footer { flex-direction:column; }
+  #trip-note { margin:46px 0; }
+}
+@media (max-width:380px) { .facts span:last-child { display:none; } .cover-intro { padding:13px; } .blue-panel { padding:20px 12px; } .cover-lede { margin:12px 0 18px; } }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
+/* Minimalist UI treatment */
+:root{--paper:#f7f6f3;--white:#fff;--ink:#202321;--muted:#666b67;--rule:#eaeaea;--blue:#2f3437;--blue-dark:#111;--olive:#edf3ec;--display:'Pretendard Variable','SF Pro Display','Helvetica Neue',sans-serif;--editorial:'Iowan Old Style','Apple SD Gothic Neo',Georgia,serif}
+body{background:var(--paper);color:var(--ink);line-height:1.6}
+.site-head{background:rgba(247,246,243,.96);border-color:var(--rule)}
+.brand{font-weight:760;letter-spacing:-.065em}.brand span{color:#777d78}
+.issue,.kicker,.meta-line{font-family:'SF Mono',ui-monospace,monospace;font-weight:600;letter-spacing:.08em;color:var(--muted)}
+.nav button{color:var(--ink);font-weight:600;border-radius:5px}.nav button.active,.nav button:hover{background:#111;color:#fff}
+.day-tabs{border-color:var(--rule)}.day-tabs button.active{color:#111;border-bottom-color:#111}.day-tabs button.active small{color:#555}
+.cover{background:#fff;color:var(--ink);border:1px solid var(--rule);min-height:min(750px,calc(100svh - 118px))}
+.cover-intro,.cover-bottom{border-color:var(--rule)}.cover-intro .kicker,.cover-intro p,.facts span,.cover-bottom small{color:var(--muted)}
+.facts span{border:1px solid var(--rule);background:#f7f6f3;border-radius:9999px}
+.blue-panel{background:#fff;color:var(--ink);padding-top:52px}.blue-panel h1{font-family:var(--editorial);font-weight:600;letter-spacing:-.055em;font-size:clamp(52px,7.8vw,112px)}.blue-panel h1 span{color:#5d645f;font-weight:400}.cover-lede{color:var(--muted);max-width:42ch}
+.polaroid{border:1px solid var(--rule);border-radius:8px}.photo{filter:saturate(.58) contrast(.96)}
+.jump{background:#111;color:#fff;border:0;border-radius:5px;padding:9px 15px;transition:background .2s,transform .2s}.jump:hover{background:#333;transform:none}.jump:active{transform:scale(.98)}
+.section-head h2{font-family:var(--editorial);font-weight:600;letter-spacing:-.04em}.section-head{border-color:var(--rule)}
+.day-layout{grid-template-columns:minmax(0,1.65fr) minmax(280px,.75fr);gap:40px}
+.day-banner{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:32px}.day-banner h3{font-family:var(--editorial);font-weight:600}.day-banner .kicker{color:var(--muted)}
+.route-jump{background:#111;border-radius:5px;font-weight:650}.route-jump:hover{background:#333}.route-jump:active{transform:scale(.98)}
+.stop,.route,.event{border-color:var(--rule)}.stop:hover,.route:hover,.event:hover{background:rgba(255,255,255,.65)}
+.stop time,.event small,.arrow{color:#515b55}.stop h4{font-weight:600}
+.note{background:#edf3ec;color:#346538;border:1px solid #e0e9df;border-radius:8px}.tag,.status,.detail span,.section-head .count{background:#edf3ec;color:#346538;border-radius:9999px;letter-spacing:.04em}
+.route a{color:#2f3437}.search{border:1px solid var(--rule);border-radius:6px}.search:focus{border-color:#111;outline:2px solid #d9dfd9}
+.overview-scroll{border:1px solid var(--rule);border-radius:8px}.overview-scroll thead th,.overview-scroll thead th:first-child{background:#f0f0ee;color:var(--ink)}.overview-scroll th:first-child{background:#f7f6f3}.overview-scroll tbody tr:nth-child(even){background:#fbfbfa}.overview-scroll th,.overview-scroll td{border-color:var(--rule)}
+.footer{border-color:var(--rule)}
+@media(max-width:700px){.cover{min-height:calc(100svh - 144px)}.blue-panel{padding:36px 16px 24px}.blue-panel h1{font-size:clamp(43px,11vw,70px)}.cover-lede{font-size:14px}.day-layout{gap:16px}.day-banner{padding:20px}.nav button.active{background:#111}.stop{background:transparent}.jump{padding:8px 10px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* User design rules: warm surfaces, 4/8px rhythm, asymmetric emphasis. */
+:root{--paper:#f5f3ee;--white:#fbfaf7;--ink:#252b28;--rule:#e5e4df;--blue:#252b28;--blue-dark:#252b28}
+body,.site-head{background:var(--paper)}
+.cover,.blue-panel{background:var(--white)}
+.cover{min-height:min(752px,calc(100svh - 120px))}
+.cover-intro{padding:24px 40px}.blue-panel{padding:56px 40px 32px}.cover-bottom{padding:16px 40px}
+.collage{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;max-width:944px}
+.polaroid{min-width:0}.polaroid:first-child .photo{aspect-ratio:2.1}.polaroid:not(:first-child) .photo{aspect-ratio:1.05}
+#app{margin-top:80px}.section-head{padding-bottom:24px;margin-bottom:32px}.day-layout{gap:40px}
+.stop{padding:24px 8px}.route,.event{padding:24px 8px}.day-banner{padding:32px}.note{padding:16px 24px}
+.jump,.route-jump,.nav button.active{background:var(--ink);color:#f9f8f4}
+.jump:hover,.route-jump:hover{background:#434b46}
+@media(max-width:700px){.cover{min-height:calc(100svh - 144px)}.cover-intro{padding:16px}.blue-panel{padding:32px 16px 24px}.cover-bottom{padding:16px}.collage{grid-template-columns:1.7fr 1fr 1fr;gap:4px}.polaroid:first-child .photo{aspect-ratio:1.18}.polaroid:not(:first-child) .photo{aspect-ratio:.7}#app{margin-top:48px}.section-head{padding-bottom:16px;margin-bottom:16px}.day-layout{gap:16px}.day-banner{padding:24px}.stop,.route,.event{padding:16px 4px}}
+
+/* Travel journal direction from the supplied image and Stitch reference. */
+:root{--paper:#f4f3ee;--white:#faf9f5;--ink:#242923;--muted:#5e655c;--rule:#d8dbd3;--blue:#567bd6;--blue-dark:#315bc0;--olive:#e5e9d8;--editorial:'Pretendard Variable','SF Pro Display','Helvetica Neue',sans-serif}
+body{background:var(--paper);color:var(--ink)}
+.site-head{background:var(--paper);border-bottom:1px solid var(--ink);backdrop-filter:none}
+.top{min-height:64px}.brand{font-size:22px;line-height:1;background:var(--ink);color:var(--white);padding:8px 10px 9px;border-radius:2px}.brand span{color:#c8d9ee}.issue{color:var(--muted)}
+.nav{gap:8px}.nav button{padding:8px 12px;border:1px solid transparent;border-radius:2px;font-size:13px}.nav button.active{background:var(--blue-dark);color:#fff}.nav button:hover:not(.active){border-color:var(--ink);background:transparent;color:var(--ink)}
+.date-dock{top:64px;background:var(--paper);padding:8px 0}.day-tabs{border:1px solid var(--ink);padding:3px;gap:3px;background:var(--white)}.day-tabs button{border:0;min-height:48px}.day-tabs button.active{border:0;background:var(--blue-dark);color:#fff}.day-tabs button.active small{color:#e7ebfa}.day-tabs button:hover:not(.active){background:var(--olive)}
+.meta-line{margin:28px 0 12px;color:var(--muted)}.meta-line span:last-child{color:var(--blue-dark)}
+.cover{background:var(--white);border:1px solid var(--ink);min-height:min(760px,calc(100svh - 120px))}.cover-intro{padding:24px 32px;background:var(--white);border-color:var(--ink)}.cover-intro p{font-size:17px;color:var(--ink)}.cover-intro .kicker{color:var(--blue-dark)}.facts span{border:1px solid var(--rule);color:var(--ink);background:var(--paper);border-radius:0}
+.blue-panel{background:var(--blue);color:var(--white);padding:48px 32px 32px;justify-content:flex-start}.blue-panel h1{align-self:stretch;text-align:left;max-width:1020px;margin:0 auto;font-family:var(--editorial);font-size:clamp(64px,8.9vw,140px);font-weight:800;line-height:.95;letter-spacing:-.09em;color:var(--white)}.blue-panel h1 span{color:var(--white);font-weight:500}.cover-lede{align-self:flex-start;width:100%;max-width:1020px;margin:20px auto 32px;color:#f5f7fc;text-align:left;font-size:18px}
+.collage{max-width:1020px;width:100%;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px;align-items:end}.polaroid,.polaroid:nth-child(n){border:0;border-radius:0;background:#fffdf8;padding:8px 8px 20px;box-shadow:0 3px 8px rgba(30,43,66,.12)}.polaroid:nth-child(2){margin-bottom:28px}.polaroid:nth-child(3){margin-bottom:8px}.polaroid:first-child .photo,.polaroid:not(:first-child) .photo{aspect-ratio:1.22;filter:saturate(.7)}.cover-bottom{background:var(--white);border-color:var(--ink);padding:12px 32px}.cover-bottom small{color:var(--muted)}.jump{background:var(--blue-dark);border-radius:2px;color:#fff;padding:10px 16px}.jump:hover{background:#1e439c}
+#app{margin-top:72px}.section-head{border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:24px}.section-head h2{font-family:var(--editorial);font-size:clamp(40px,5vw,68px);font-weight:800;letter-spacing:-.075em}.section-head .kicker{color:var(--blue-dark)}.section-head .count{border-radius:2px;background:var(--olive);color:var(--ink)}
+.day-layout{grid-template-columns:minmax(0,1.7fr) minmax(280px,.75fr);gap:28px}.day-banner{background:var(--olive);border:1px solid var(--ink);border-radius:2px;padding:28px}.day-banner h3{font-family:var(--editorial);font-size:40px;font-weight:800}.day-banner .kicker{color:var(--blue-dark)}.route-jump{background:var(--blue-dark);border-radius:2px}.route-jump:hover{background:#1e439c}.note{background:#eef0e6;color:#394333;border:1px solid #cdd3c2;border-radius:2px}
+.timeline{border-top:1px solid var(--rule)}.stop{border-bottom:1px solid var(--rule);padding:20px 8px}.stop time,.event small{color:var(--blue-dark)}.stop h4{font-size:18px}.tag,.status,.detail span{border-radius:2px;background:var(--olive);color:var(--ink)}
+.route,.event{background:var(--white);border:1px solid var(--rule);border-radius:2px;padding:24px;margin-bottom:12px}.route:hover,.event:hover{background:#fffdf9}.route a{color:var(--blue-dark)}.search{border:1px solid var(--ink);border-radius:2px}.overview-scroll{border:1px solid var(--ink);border-radius:2px}.overview-scroll thead th,.overview-scroll thead th:first-child{background:var(--blue-dark);color:#fff}.overview-scroll th:first-child{background:var(--olive)}
+#trip-note{margin:64px 0}.footer{border-top:1px solid var(--ink)}
+@media(max-width:700px){html{scroll-padding-top:120px}.top{min-height:56px}.brand{font-size:19px;padding:7px 8px}.issue{font-size:9px}.nav{background:var(--paper);border-top:1px solid var(--ink)}.nav button{border-radius:2px;font-size:11px}.date-dock{top:56px;padding:6px 0}.day-tabs button{min-height:48px;font-size:12px}.meta-line{margin:16px 0 8px}.cover{min-height:calc(100svh - 144px)}.cover-intro{padding:16px}.cover-intro p{font-size:14px}.blue-panel{padding:28px 16px 24px}.blue-panel h1{font-size:clamp(48px,12vw,78px);letter-spacing:-.08em}.cover-lede{font-size:14px;margin:16px 0 24px}.collage{grid-template-columns:1.25fr 1fr;gap:8px}.polaroid,.polaroid:nth-child(n){padding:4px 4px 12px;margin:0}.polaroid:nth-child(3){display:none}.polaroid:first-child .photo,.polaroid:not(:first-child) .photo{aspect-ratio:1}.cover-bottom{padding:12px 16px}.cover-bottom small{font-size:9px}.jump{padding:9px 12px;font-size:11px}#app{margin-top:48px}.section-head h2{font-size:40px}.day-banner{padding:20px}.day-banner h3{font-size:28px}.stop{padding:16px 0}.stop h4{font-size:16px}.route,.event{padding:20px}}
+@media(max-width:380px){.blue-panel h1{font-size:44px}.cover-lede{font-size:13px}.facts span:last-child{display:none}}
+
+/* Copy reduction: one title, one date line, one action. */
+.cover{min-height:min(700px,calc(100svh - 88px))}.blue-panel{justify-content:center;padding:48px 32px}.cover-lede{margin:20px auto 40px}.cover-bottom{justify-content:flex-end}.section-head{margin-bottom:24px}.day-banner{display:flex;align-items:center;justify-content:space-between;gap:24px}.day-banner h3{margin:0}.footer{justify-content:flex-end}.nav button{font-size:14px}
+@media(max-width:700px){.cover{min-height:calc(100svh - 104px)}.blue-panel{padding:32px 16px}.cover-lede{margin:16px 0 32px}.day-banner{display:flex;align-items:center;gap:12px}.day-banner h3{font-size:26px}.route-jump{margin:0}.footer{justify-content:center}}
+
+/* Pretendard type hierarchy */
+:root{
+  --font-sans:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --type-display:clamp(56px,8.5vw,128px);
+  --type-title:clamp(34px,4.4vw,60px);
+  --type-section:clamp(24px,2.8vw,36px);
+  --type-card:18px;
+  --type-body:16px;
+  --type-detail:14px;
+  --type-label:12px;
+}
+html,body,button,input,table{font-family:var(--font-sans)}
+body{font-size:var(--type-body);font-weight:400;line-height:1.6;letter-spacing:-.015em}
+.blue-panel h1{font-family:var(--font-sans);font-size:var(--type-display);font-weight:800;line-height:.98;letter-spacing:-.085em}
+.blue-panel h1 span{font-weight:500}
+.cover-lede{font-size:var(--type-card);font-weight:400;line-height:1.55;letter-spacing:-.025em}
+.section-head h2{font-family:var(--font-sans);font-size:var(--type-title);font-weight:750;line-height:1.1;letter-spacing:-.065em}
+.day-banner h3{font-family:var(--font-sans);font-size:var(--type-section);font-weight:750;line-height:1.15;letter-spacing:-.055em}
+.event h3,.fromto{font-size:var(--type-card);font-weight:700;line-height:1.4;letter-spacing:-.035em}
+.stop h4{font-size:var(--type-body);font-weight:650;line-height:1.5;letter-spacing:-.025em}
+.route p,.event p,.note,.section-head p{font-size:var(--type-detail);font-weight:400;line-height:1.6}
+.stop time,.route a,.nav button,.route-jump,.jump{font-size:var(--type-detail);font-weight:650;line-height:1.4}
+.day-tabs button{font-size:var(--type-body);font-weight:700}
+.day-tabs button small,.tag,.status,.detail span,.event small,.footer{font-size:var(--type-label);font-weight:600;line-height:1.4;letter-spacing:.015em}
+@media(max-width:700px){
+  :root{--type-display:clamp(42px,11.7vw,72px);--type-title:36px;--type-section:27px;--type-card:17px;--type-body:15px;--type-detail:13px;--type-label:11px}
+  .blue-panel h1{font-size:var(--type-display)}
+  .section-head h2{font-size:var(--type-title)}
+  .day-banner h3{font-size:var(--type-section)}
+  .stop h4{font-size:var(--type-body)}
+  .nav button{font-size:11px}
+  .day-tabs button{font-size:13px}
+}
+
+/* Direct travel title */
+.blue-panel h1{max-width:1020px;font-size:clamp(72px,10vw,144px);line-height:1;letter-spacing:-.085em;white-space:nowrap}
+.cover-lede{margin-top:16px}
+@media(max-width:700px){.blue-panel h1{font-size:clamp(46px,12vw,78px);white-space:normal}.cover-lede{margin-top:12px}}
+
+/* Expandable transport beneath each schedule item. */
+.stop{display:block;padding:0;border-bottom:1px solid var(--rule)}
+.stop summary{display:grid;grid-template-columns:132px minmax(0,1fr) auto auto;align-items:center;gap:12px;padding:20px 8px;cursor:pointer;list-style:none;transition:background .2s}
+.stop summary::-webkit-details-marker{display:none}
+.stop summary:hover{background:rgba(255,255,255,.46)}
+.stop summary:focus-visible{outline:2px solid var(--blue-dark);outline-offset:-2px}
+.stop summary time{grid-column:1;grid-row:1}
+.stop summary h4{grid-column:2;grid-row:1;margin:0}
+.stop summary .tag{grid-column:3;grid-row:1}
+.stop-toggle{grid-column:4;grid-row:1;width:10px;height:10px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .2s;margin:0 10px 5px}
+.stop[open] .stop-toggle{transform:rotate(225deg);margin:5px 10px 0}
+.stop-route{margin:0 8px 20px 152px;padding:16px 20px;background:var(--white);border:1px solid var(--rule);font-size:14px;line-height:1.6}
+.stop-route strong{display:block;font-size:14px;font-weight:700}.stop-route p{margin:8px 0 0;color:var(--ink)}.stop-route .stop-route-note{color:var(--muted)}.stop-duration{display:inline-block;margin-top:8px;color:var(--blue-dark);font-weight:650}.stop-route a{display:inline-block;margin-top:12px;color:var(--blue-dark);font-weight:650}.stop-route--empty{color:var(--muted)}
+@media(max-width:700px){.stop summary{grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;padding:16px 4px}.stop summary time{grid-column:1;grid-row:1}.stop summary h4{grid-column:1 / -1;grid-row:2;padding-right:28px}.stop summary .tag{grid-column:2;grid-row:1}.stop-toggle{grid-column:2;grid-row:2;align-self:center;margin-right:8px}.stop-route{margin:0 0 16px;padding:16px}}
+
+.stop--static .stop-row{display:grid;grid-template-columns:132px minmax(0,1fr) auto;align-items:center;gap:12px;padding:20px 8px}
+.stop--static time{grid-column:1;grid-row:1}.stop--static h4{grid-column:2;grid-row:1;margin:0}.stop--static .tag{grid-column:3;grid-row:1}
+.stop--static:hover{background:transparent}
+@media(max-width:700px){.stop--static .stop-row{grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;padding:16px 4px}.stop--static time{grid-column:1;grid-row:1}.stop--static h4{grid-column:1 / -1;grid-row:2}.stop--static .tag{grid-column:2;grid-row:1}}
+</style><link rel="stylesheet" href="leaflet.css"><script src="leaflet.js"></script></head><body><a class="skip-link" href="#app">일정으로 바로 가기</a>
+<header class="site-head"><div class="shell top">
+  <a class="brand" href="#cover" aria-label="요나고 플래너 표지">yonago<span>.note</span></a>
+  <nav class="nav" aria-label="여행 플래너 메뉴"><button type="button" data-view="schedule"><span>날짜별 일정</span></button><button type="button" data-view="events"><span>지역 이벤트</span></button><button type="button" data-view="overview"><span>전체 시간표</span></button></nav>
+</div></header>
+<div class="shell">
+  <div class="date-dock" id="dates"></div>
+  <section class="cover" id="cover" aria-labelledby="cover-title">
+    <div class="blue-panel">
+      
+      <h1 id="cover-title">요나고 여행</h1><p class="cover-lede">2026년 12월 10–14일 · 4박 5일 일정</p>
+      <div class="collage"><figure class="polaroid"><div class="photo photo-0" aria-hidden="true"></div></figure><figure class="polaroid"><div class="photo photo-1" aria-hidden="true"></div></figure><figure class="polaroid"><div class="photo photo-2" aria-hidden="true"></div></figure></div>
+    </div>
+    <div class="cover-bottom"><a href="#app" class="jump">일정 보기 ↓</a></div>
+  </section>
+  <main id="app" tabindex="-1" aria-live="polite"></main>
+<div class="note" id="trip-note"><b>출발 전 확인</b> · 12/11~13 숙소 미정. 12/13 유메미나토타워 → 하나카이로 이동과 일루미네이션·셔틀 운영 시간을 확인하세요.</div><footer class="footer"><span>일정: 여행 엑셀 기반 · 표지 이미지: AI 생성</span></footer></div><script>const DATA={"days": [{"day": "12/10 목", "sub": "혼자 도착하는 날", "emoji": "", "slots": [{"time": "13:00–14:00", "title": "13:20 한국 출발"}, {"time": "14:00–15:00", "title": "14:50 요나고 공항 도착"}, {"time": "15:00–16:00", "title": "입국·공항 → 요나고 이동"}, {"time": "16:00–17:00", "title": "호텔 루트인 요나고 체크인"}, {"time": "17:00–18:00", "title": "빌리지 뱅가드 (히게단 사인) ※ 전시 확인"}, {"time": "18:00–19:00", "title": "저녁 식사·시내 산책"}, {"time": "19:00–20:00", "title": "요나고 판타지아 일루미네이션"}, {"time": "20:00–21:00", "title": "호텔 복귀·휴식"}]}, {"day": "12/11 금", "sub": "종현 합류 & 시내 산책", "emoji": "☕", "slots": [{"time": "09:00–10:00", "title": "혼자 아침·카페"}, {"time": "10:00–11:00", "title": "요나고 시내 자유 관광"}, {"time": "11:00–12:00", "title": "쇼핑·점심"}, {"time": "13:00–14:00", "title": "요나고 시내 쇼핑·점심 (빈티지숍 제외)"}, {"time": "14:00–15:00", "title": "종현 14:50 요나고 도착"}, {"time": "15:00–16:00", "title": "종현 입국·시내 이동"}, {"time": "16:00–17:00", "title": "종현 합류 / 숙소 체크인"}, {"time": "17:00–18:00", "title": "종현 합류 / 숙소 체크인"}, {"time": "18:00–19:00", "title": "함께 저녁 식사"}, {"time": "19:00–20:00", "title": "마치나카 크리스털 야경 후보"}, {"time": "20:00–21:00", "title": "저녁 식사 후 요나고 판타지아 ✨"}, {"time": "21:00–22:00", "title": "마치나카 크리스털 야경 산책 ✨ (점등 확인)"}]}, {"day": "12/12 토", "sub": "히게단 야쿠모 & 이즈모", "emoji": "⛩️", "slots": [{"time": "08:00–09:00", "title": "아침·요나고역 이동"}, {"time": "09:00–10:00", "title": "특급 야쿠모 → 이즈모시역  I LOVE... 목표"}, {"time": "10:00–11:00", "title": "버스 → 이즈모타이샤"}, {"time": "11:00–12:00", "title": "이즈모타이샤 참배·관광"}, {"time": "12:00–13:00", "title": "신몬도리 / 이즈모 소바 점심"}, {"time": "13:00–14:00", "title": "신몬도리 상점가·카페"}, {"time": "14:00–15:00", "title": "신몬도리 산책"}, {"time": "15:00–16:00", "title": "이나사 해변 (날씨 좋으면)"}, {"time": "16:00–17:00", "title": "이즈모시역 이동"}, {"time": "17:00–18:00", "title": "특급 야쿠모 → 요나고  Pretender 목표"}, {"time": "18:00–19:00", "title": "요나고 복귀·저녁"}]}, {"day": "12/13 일", "sub": "요괴 마을 & 빛의 정원", "emoji": "", "slots": [{"time": "09:00–10:00", "title": "JR 요나고역 → 사카이미나토역 (사카이선 약 45~50분)"}, {"time": "10:00–11:00", "title": "미즈키 시게루 로드·기타로 굿즈"}, {"time": "11:00–12:00", "title": "요괴 신사·미즈키 시게루 기념관"}, {"time": "12:00–13:00", "title": "해산물 점심 / 사카이미나토역 이동"}, {"time": "13:00–14:00", "title": "사카이미나토 → 유메미나토타워 (택시 약 15분 / 예약버스 대안)"}, {"time": "14:00–15:00", "title": "유메미나토타워 전망대 (14:30 전 출발 목표)"}, {"time": "15:00–16:00", "title": "유메미나토타워 → 요나고역 (택시 약 30분 / JR 대안은 환승·도보 필요)"}, {"time": "16:00–17:00", "title": "16:00 요나고역 남쪽 광장 무료 셔틀 → 하나카이로 16:25"}, {"time": "17:00–18:00", "title": "하나카이로 겨울 일루미네이션·산책"}, {"time": "18:00–19:00", "title": "일루미네이션 관람 / 불꽃놀이 장소 사전 확인"}, {"time": "19:00–20:00", "title": "19:00 불꽃놀이 후보 (개최·날씨 확인)"}, {"time": "20:00–21:00", "title": "20:00 하나카이로 무료 셔틀 → 요나고역 20:25"}, {"time": "21:00–22:00", "title": "요나고역 도착 후 숙소 이동·휴식"}]}, {"day": "12/14 월", "sub": "마지막 쇼핑 & 귀국", "emoji": "", "slots": [{"time": "09:00–10:00", "title": "아침 식사·체크아웃"}, {"time": "10:00–11:00", "title": "요나고 마지막 쇼핑"}, {"time": "11:00–12:00", "title": "점심·짐 찾기"}, {"time": "12:00–13:00", "title": "공항 이동 준비"}, {"time": "13:00–14:00", "title": "요나고 공항 이동·수속"}, {"time": "14:00–15:00", "title": "출국 준비"}, {"time": "15:00–16:00", "title": "15:50 요나고 출발"}, {"time": "16:00–17:00", "title": "비행 중"}, {"time": "17:00–18:00", "title": "17:40 한국 도착"}]}], "routes": [{"day": "12/10 목", "from": "요나고 기타로 공항", "to": "요나고역", "how": "공항 연락버스(항공편 연계) 또는 공항에서 도보로 JR 요나고공항역 → JR 사카이선 요나고역", "duration": "버스 약 25~35분 / JR 약 30분+도보", "note": "도착편과 연결되는 버스·열차 시각 확인", "link": "https://www.yonago-air.com/access/train"}, {"day": "12/10 목", "from": "요나고역", "to": "호텔 루트인 요나고", "how": "도보 이동(고지마치 방면)", "duration": "약 10~15분", "note": "12/10 숙소 확정", "link": ""}, {"day": "12/10 목", "from": "호텔 루트인 요나고", "to": "이온 요나고역앞점 빌리지 뱅가드", "how": "호텔 → 요나고역 방면 도보 → 역앞 이온 쇼핑몰", "duration": "약 15~20분", "note": "히게단 사인 전시·매장 영업 여부 확인", "link": ""}, {"day": "12/10 목", "from": "이온 요나고역앞점", "to": "요나고 판타지아(문화홀)", "how": "쇼핑몰 맞은편 요나고시 문화홀까지 도보", "duration": "약 2~5분", "note": "일루미네이션 점등 여부 확인", "link": "https://yonagobunka.net/culturehall/access/"}, {"day": "12/11 금", "from": "숙소 (12/11~13 미정)", "to": "요나고 시내 카페·잡화 쇼핑", "how": "숙소가 요나고역 부근이면 도보, 외곽이면 버스", "duration": "장소 결정 후 산정", "note": "빈티지숍 제외; 소규모 잡화점은 영업 확인", "link": ""}, {"day": "12/11 금", "from": "요나고 기타로 공항 (종현)", "to": "요나고역 / 숙소", "how": "공항 연락버스 또는 JR 요나고공항역 → 요나고역", "duration": "약 30~50분+대기", "note": "종현 14:50 도착, 합류 시간은 항공편·교통에 따라 변동", "link": "https://www.yonago-air.com/access/train"}, {"day": "12/11 금", "from": "요나고역·저녁 식사 장소", "to": "요나고 판타지아", "how": "요나고역 남쪽 문화홀까지 도보", "duration": "약 2~5분", "note": "점등 확인", "link": "https://yonagobunka.net/culturehall/access/"}, {"day": "12/11 금", "from": "요나고 판타지아", "to": "마치나카 크리스털(요나고시 공회당)", "how": "시내 방향 도보", "duration": "약 20분", "note": "점등 확인; 피곤하면 생략", "link": "https://yonagobunka.net/culturehall/access/"}, {"day": "12/12 토", "from": "요나고역", "to": "JR 이즈모시역", "how": "JR 특급 야쿠모(지정석) 이즈모시 방면 탑승", "duration": "약 50~65분", "note": "정확한 출발편·차내 히게단 멜로디 확인", "link": "https://www.jr-odekake.net/"}, {"day": "12/12 토", "from": "JR 이즈모시역 북쪽 1번 승강장", "to": "이즈모타이샤 정문", "how": "이치바타 버스 다이샤 방면 → 正門前(정문앞) 하차", "duration": "약 25~35분+대기", "note": "신사 정문에서 시작; 공식 관광협회 안내", "link": "https://www.izumo-kankou.gr.jp/676"}, {"day": "12/12 토", "from": "이즈모타이샤", "to": "신몬도리·이즈모 소바", "how": "도보(정문 앞 참배길)", "duration": "약 5~15분", "note": "상점가·점심", "link": ""}, {"day": "12/12 토", "from": "신몬도리 / 이즈모타이샤", "to": "이나사 해변 (선택)", "how": "도보 또는 현지 택시", "duration": "도보 약 20~30분", "note": "날씨·일몰 고려, 선택 코스", "link": ""}, {"day": "12/12 토", "from": "이즈모타이샤 정문 부근", "to": "JR 이즈모시역", "how": "이치바타 버스 正門前 부근 승차 → 이즈모시역", "duration": "약 25~35분+대기", "note": "막차·배차 확인", "link": "https://www.izumo-kankou.gr.jp/676"}, {"day": "12/12 토", "from": "JR 이즈모시역", "to": "요나고역", "how": "JR 특급 야쿠모 오카야마 방면 탑승", "duration": "약 50~65분", "note": "지정석·차내 멜로디 확인", "link": "https://www.jr-odekake.net/"}, {"day": "12/13 일", "from": "요나고역", "to": "사카이미나토역", "how": "JR 사카이선(기타로 캐릭터 열차 편성 가능)", "duration": "약 45~50분", "note": "주말 시간표 확인; 캐릭터 열차 편성 미보장", "link": "https://www.yonago-air.com/access/train"}, {"day": "12/13 일", "from": "사카이미나토역", "to": "미즈키 시게루 로드·요괴 신사·기념관", "how": "역 앞에서 미즈키 시게루 로드 따라 도보", "duration": "약 5~20분", "note": "상점·기념관 운영시간 확인", "link": ""}, {"day": "12/13 일", "from": "사카이미나토역 / 로드", "to": "유메미나토타워", "how": "택시 약 15분 권장 / 예약형 합승버스 みなとーる 이용 가능 여부 확인", "duration": "택시 약 15분", "note": "버스 100엔(공식 안내), 사전 예약·승차지 확인 필수", "link": "https://www.yumeminatotower.gr.jp/access/"}, {"day": "12/13 일", "from": "유메미나토타워", "to": "요나고역 (셔틀 환승)", "how": "택시 약 30분 권장. 대안: 도보 약 24분 → JR 다카마쓰초역 → 요나고역", "duration": "택시 약 30분 / JR 대안 60분 이상 가능", "note": "16:00 셔틀을 위해 15:45 이전 요나고역 도착 목표. 택시 미이용 시 코스 축소 고려", "link": "https://www.yumeminatotower.gr.jp/access/"}, {"day": "12/13 일", "from": "요나고역 남쪽 광장 셔틀 승강장", "to": "돗토리 하나카이로", "how": "무료 직행 셔틀 16:00 출발 → 16:25 도착", "duration": "25분", "note": "2026 겨울 공식 게시 시각; 정원 초과 가능", "link": "https://www.tottorihanakairou.or.jp/access/shuttle/"}, {"day": "12/13 일", "from": "돗토리 하나카이로", "to": "요나고역", "how": "무료 셔틀 20:00 출발 → 20:25 도착", "duration": "25분", "note": "19:00 불꽃놀이가 열릴 경우 관람 후 탑승 가능. 행사 개최는 별도 확인", "link": "https://www.tottorihanakairou.or.jp/access/shuttle/"}, {"day": "12/14 월", "from": "숙소 (12/11~13 미정)", "to": "요나고역·쇼핑", "how": "역 인근이면 도보 / 짐 보관 후 쇼핑", "duration": "숙소 결정 후 산정", "note": "오전만 관광, 항공편 시간 우선", "link": ""}, {"day": "12/14 월", "from": "요나고역", "to": "요나고 기타로 공항", "how": "공항 연락버스 또는 JR 사카이선 → 요나고공항역 + 공항 도보", "duration": "약 30~50분+대기", "note": "15:50 출발 비행기; 13:30 전후 공항 도착 목표", "link": "https://www.yonago-air.com/access/train"}], "events": [{"date": "12/11(금)", "name": "요나고 판타지아 일루미네이션", "time": "저녁 (점등 시간 확인)", "place": "요나고 문화홀 인근", "status": "저녁 일정에 반영", "note": "2026 운영·점등 확인"}, {"date": "12/11(금)", "name": "마치나카 크리스털", "time": "저녁 (점등 시간 확인)", "place": "요나고 공회당", "status": "야경 후보로 반영", "note": "정확한 운영 기간·시간 확인"}, {"date": "12/12(토)", "name": "하나카이로 쌍둥이자리 유성군 관측", "time": "19:30~20:30 (전달된 정보)", "place": "돗토리 하나카이로", "status": "선택 행사 / 이즈모 일정과 충돌", "note": "사전 예약·정원·날씨·행사 실재 여부 확인"}, {"date": "12/12(토)", "name": "크리스마스 카드 유리펜 체험", "time": "14:00~16:00 (전달된 정보)", "place": "요나고", "status": "선택 행사 / 이즈모 일정과 충돌", "note": "개최 장소·예약·참가비 확인"}, {"date": "12/12(토)", "name": "빵 만들기 체험", "time": "14:00~17:00 (전달된 정보)", "place": "요나고", "status": "선택 행사 / 이즈모 일정과 충돌", "note": "개최 장소·예약·참가비 확인"}, {"date": "12/12~14", "name": "개인전 「射手座BP」", "time": "운영시간 미확인", "place": "요나고", "status": "시간 여유 시 후보", "note": "장소·기간·시간 확인"}, {"date": "12/13(일)", "name": "하나카이로 겨울 일루미네이션", "time": "17:30~21:00 (전달된 정보)", "place": "돗토리 하나카이로", "status": "기존 일정 유지", "note": "입장료·운영기간·셔틀 확인"}, {"date": "12/13(일)", "name": "하나카이로 겨울 불꽃놀이", "time": "19:00 (전달된 정보)", "place": "돗토리 하나카이로", "status": "기존 일정 유지 / 조건부", "note": "12/13 개최 여부·날씨·귀환편 확인"}, {"date": "12/13(일)", "name": "히에즈촌 음악제", "time": "13:00~16:00 (전달된 정보)", "place": "히에즈촌", "status": "선택 행사 / 사카이미나토 일정과 충돌", "note": "행사 장소·운영 확인"}, {"date": "12/13(일)", "name": "RED SPIDER 라이브", "time": "17:00 (전달된 정보)", "place": "요나고 AZTiC laughs", "status": "선택 행사 / 하나카이로와 충돌", "note": "티켓·개최·입장 시간 확인"}, {"date": "12/14(월)", "name": "여성 창업자 마르셰", "time": "16:00 (전달된 정보)", "place": "요나고", "status": "참석 불가 (15:50 비행기)", "note": "일정에 넣지 않음"}]};
+const app = document.getElementById('app');
+const menu = document.querySelectorAll('[data-view]');
+const dates = document.getElementById('dates');
+const PIN_KEY = 'yonago-planner-pins-v1';
+const cloudMode = location.protocol === 'https:' || location.protocol === 'http:';
+const tripMatch = location.hash.match(/^#trip=([0-9a-f-]{36})$/i);
+let tripKey = tripMatch ? tripMatch[1].toLowerCase() : null;
+if (cloudMode) {
+  if (!tripKey) {
+    try { tripKey = localStorage.getItem('yonago-trip-key'); } catch (_) {}
+  }
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(tripKey || '')) tripKey = crypto.randomUUID();
+  try { localStorage.setItem('yonago-trip-key', tripKey); } catch (_) {}
+}
+let mapInstance = null;
+let pinLayer = null;
+let pendingPoint = null;
+let pins = [];
+try {
+  const saved = JSON.parse(localStorage.getItem(PIN_KEY) || '[]');
+  if (!cloudMode && Array.isArray(saved)) pins = saved.filter(pin => Number.isFinite(pin.lat) && Number.isFinite(pin.lng) && typeof pin.name === 'string');
+} catch (_) {}
+let view = 'schedule';
+let day = 0;
+const routeBySlot = [
+  {2:0,3:1,4:2,6:3},
+  {1:0,5:1,10:2,11:3},
+  {1:0,2:1,4:2,7:3,8:4,9:5},
+  {0:0,1:1,4:2,6:3,7:4,11:5},
+  {1:0,4:1}
+];
+
+const esc = value => String(value ?? '').replace(/[&<>"']/g, char =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const tabs = () => `<div class="day-tabs" role="group" aria-label="여행 날짜">${DATA.days.map((date, index) => {
+  const [number, weekday] = date.day.split(' ');
+  return `<button class="${day === index ? 'active' : ''}" data-day="${index}" aria-pressed="${day === index}"><small>DAY ${String(index + 1).padStart(2, '0')}</small>${esc(number)} <span>${esc(weekday)}</span></button>`;
+}).join('')}</div>`;
+const heading = (title, subtitle = '', extra = '') => `<div class="section-head${extra.startsWith('<input') ? ' with-search' : ''}"><div><h2>${title}</h2>${subtitle ? `<p>${subtitle}</p>` : ''}</div>${extra}</div>`;
+
+function renderSchedule(date) {
+  const alert = date.day.startsWith('12/13')
+    ? '<p class="note day-alert"><strong>16:00 셔틀 환승</strong> · 요나고역 15:45 이전 도착을 목표로 잡아두세요. <a href="#trip-note">출발 전 확인 ↓</a></p>' : '';
+  return `${heading('날짜별 일정')}
+    <div class="day-layout">
+      <aside class="day-side">
+        <div class="day-banner"><div><h3>${esc(date.day)}</h3></div></div>
+        ${alert}
+        ${renderMap()}
+      </aside>
+      <div class="timeline">${date.slots.map((slot, index) => {
+         const routeIndex = routeBySlot[day][index];
+         const route = routeIndex === undefined ? null : DATA.routes.filter(item => item.day === date.day)[routeIndex];
+         const label = /후보|확인|선택|미정/.test(slot.title) ? '<span class="tag">확인 필요</span>' : '';
+         if (!route) return `<article class="stop stop--static"><div class="stop-row"><time>${esc(slot.time)}</time><h4>${esc(slot.title)}</h4>${label}</div></article>`;
+         const transport = `<div class="stop-route"><strong>${esc(route.from)} → ${esc(route.to)}</strong><p>${esc(route.how)}</p>${route.duration ? `<span class="stop-duration">${esc(route.duration)}</span>` : ''}${route.note ? `<p class="stop-route-note">${esc(route.note)}</p>` : ''}${/^https:\/\//.test(route.link) ? `<a href="${esc(route.link)}" target="_blank" rel="noopener noreferrer">공식 안내 열기 ↗</a>` : ''}</div>`;
+         return `<details class="stop" name="schedule-route"><summary><time>${esc(slot.time)}</time><h4>${esc(slot.title)}</h4>${label}<span class="stop-toggle" aria-hidden="true"></span></summary>${transport}</details>`;
+       }).join('')}</div>
+    </div>`;
+}
+
+function renderEvents() {
+  return `${heading('지역 이벤트')}`
+    + `<div class="event-grid">${DATA.events.map(event => `<article class="event"><small>${esc(event.date)} · ${esc(event.time)}</small>
+    <h3>${esc(event.name)}</h3><p>${esc(event.place)}</p><span class="status">${esc(event.status)}</span><p>${esc(event.note)}</p></article>`).join('')}</div>`;
+}
+
+function renderOverview() {
+  const rows = Array.from({length:16}, (_, index) => {
+    const hour = String(index + 7).padStart(2, '0');
+    return `<tr><th scope="row">${hour}:00</th>${DATA.days.map(date => {
+      const slot = date.slots.find(item => item.time.startsWith(hour));
+      return `<td>${slot ? esc(slot.title) : '·'}</td>`;
+    }).join('')}</tr>`;
+  }).join('');
+  return `${heading('전체 시간표', '좌우로 넘겨 날짜를 비교하세요.')}
+    <div class="overview-scroll" tabindex="0" role="region" aria-label="날짜별 전체 시간표"><table>
+    <thead><tr><th scope="col">시간</th>${DATA.days.map(date => `<th scope="col">${esc(date.day)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function renderMap() {
+  return `<div class="map-layout">
+      <h3 class="map-heading">이날의 지도</h3>
+      <div id="trip-map" role="application" aria-label="${esc(DATA.days[day].day)} 여행 지도"></div>
+      <div class="map-side">
+        <p class="map-help">지도를 눌러 핀을 추가하세요.</p>
+        ${cloudMode ? '<div class="share-actions"><button type="button" id="share-link">공유 링크 복사</button><button type="button" id="pin-reload">핀 새로고침</button></div>' : ''}
+        <form id="pin-form" class="pin-form" hidden>
+          <h3>핀 추가</h3>
+          <label for="pin-name">장소 이름</label>
+          <input id="pin-name" name="name" type="text" maxlength="60" required placeholder="예: 요나고역">
+          <div class="pin-actions"><button type="submit">핀 저장</button><button type="button" id="pin-cancel">취소</button></div>
+        </form>
+        <h3>이날의 핀 <span id="pin-count">0</span></h3>
+        <div id="pin-list" class="pin-list"></div>
+        <p id="map-status" class="map-status" role="status"></p>
+      </div>
+    </div>`;
+}
+function mapStatus(message) {
+  const element = document.getElementById('map-status');
+  if (element) element.textContent = message;
+}
+async function loadSharedPins() {
+  if (!cloudMode) return;
+  try {
+    const response = await fetch('/api/pins', {headers:{'x-trip-key':tripKey}, cache:'no-store'});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || '핀을 불러오지 못했습니다.');
+    pins = data.pins;
+    refreshPins();
+    mapStatus('');
+  } catch (error) { mapStatus(error.message); }
+}
+async function savePin(pin) {
+  if (!cloudMode) {
+    pins.push({id:String(Date.now()) + '-' + Math.random().toString(36).slice(2), ...pin});
+    try { localStorage.setItem(PIN_KEY, JSON.stringify(pins)); } catch (_) { mapStatus('이 브라우저에서는 핀을 저장할 수 없습니다.'); }
+    refreshPins();
+    return true;
+  }
+  try {
+    const response = await fetch('/api/pins', {method:'POST', headers:{'Content-Type':'application/json','x-trip-key':tripKey}, body:JSON.stringify(pin)});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || '핀을 저장하지 못했습니다.');
+    pins.push(data.pin);
+    refreshPins();
+    mapStatus('핀이 공유되었습니다.');
+    return true;
+  } catch (error) { mapStatus(error.message); return false; }
+}
+async function deletePin(id) {
+  if (cloudMode) {
+    try {
+      const response = await fetch('/api/pins?id=' + encodeURIComponent(id), {method:'DELETE', headers:{'x-trip-key':tripKey}});
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || '핀을 삭제하지 못했습니다.');
+    } catch (error) { mapStatus(error.message); return; }
+  }
+  pins = pins.filter(item => item.id !== id);
+  if (!cloudMode) try { localStorage.setItem(PIN_KEY, JSON.stringify(pins)); } catch (_) {}
+  refreshPins();
+}
+function refreshPins() {
+  if (!mapInstance || !pinLayer) return;
+  pinLayer.clearLayers();
+  const dayPins = pins.filter(pin => pin.day === day);
+  dayPins.forEach(pin => {
+    const marker = L.circleMarker([pin.lat, pin.lng], {radius:8, color:'#244fb6', weight:2, fillColor:'#5f82d8', fillOpacity:1}).addTo(pinLayer);
+    marker.bindPopup(`<strong>${esc(pin.name)}</strong><br>${esc(DATA.days[pin.day]?.day || '')}`);
+  });
+  document.getElementById('pin-count').textContent = String(dayPins.length);
+  document.getElementById('pin-list').innerHTML = dayPins.length ? dayPins.map(pin => `<div class="pin-row"><button type="button" class="pin-focus" data-pin="${esc(pin.id)}"><strong>${esc(pin.name)}</strong></button><button type="button" class="pin-delete" data-delete="${esc(pin.id)}" aria-label="${esc(pin.name)} 핀 삭제">삭제</button></div>`).join('') : '<p class="pin-empty">아직 저장한 핀이 없습니다.</p>';
+  document.querySelectorAll('[data-pin]').forEach(button => button.onclick = () => {
+    const pin = pins.find(item => item.id === button.dataset.pin);
+    if (pin) { mapInstance.setView([pin.lat, pin.lng], 14); }
+  });
+  document.querySelectorAll('[data-delete]').forEach(button => button.onclick = () => deletePin(button.dataset.delete));
+}
+function initMap() {
+  if (typeof L === 'undefined') {
+    document.getElementById('map-status').textContent = '지도를 불러오지 못했습니다. 인터넷 연결을 확인하세요.';
+    return;
+  }
+  const centers = [[35.4333,133.3333],[35.4333,133.3333],[35.367,132.755],[35.505,133.238],[35.4333,133.3333]];
+  mapInstance = L.map('trip-map', {scrollWheelZoom:false}).setView(centers[day], 11);
+  const tiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom:19,
+    attribution:'Sources: Esri, HERE, Garmin, USGS, Intermap, © OpenStreetMap contributors, GIS User Community'
+  }).addTo(mapInstance);
+  let tileErrorShown = false;
+  tiles.on('tileerror', () => {
+    if (tileErrorShown) return;
+    tileErrorShown = true;
+    document.getElementById('map-status').textContent = '지도 배경을 불러오지 못했습니다. 인터넷 연결을 확인하세요.';
+  });
+  pinLayer = L.layerGroup().addTo(mapInstance);
+  mapInstance.on('click', event => {
+    pendingPoint = event.latlng;
+    const form = document.getElementById('pin-form');
+    form.hidden = false;
+    document.getElementById('pin-name').focus();
+  });
+  document.getElementById('pin-cancel').onclick = () => {
+    pendingPoint = null;
+    document.getElementById('pin-form').hidden = true;
+  };
+  document.getElementById('pin-form').onsubmit = async event => {
+    event.preventDefault();
+    if (!pendingPoint) return;
+    const name = document.getElementById('pin-name').value.trim();
+    if (!name) return;
+    const submit = event.target.querySelector('[type="submit"]');
+    submit.disabled = true;
+    const saved = await savePin({name, day, lat:pendingPoint.lat, lng:pendingPoint.lng});
+    submit.disabled = false;
+    if (saved) { pendingPoint = null; event.target.reset(); event.target.hidden = true; }
+  };
+  refreshPins();
+  if (cloudMode) {
+    document.getElementById('share-link').onclick = async () => {
+      const url = location.href.split('#')[0] + '#trip=' + tripKey;
+      try { await navigator.clipboard.writeText(url); mapStatus('공유 링크를 복사했습니다. 링크를 가진 사람은 핀을 수정할 수 있습니다.'); }
+      catch (_) { mapStatus('링크를 복사하지 못했습니다: ' + url); }
+    };
+    document.getElementById('pin-reload').onclick = loadSharedPins;
+    loadSharedPins();
+  }
+  const dayPins = pins.filter(pin => pin.day === day);
+  if (dayPins.length) mapInstance.fitBounds(dayPins.map(pin => [pin.lat,pin.lng]), {padding:[24,24],maxZoom:14});
+  setTimeout(() => mapInstance?.invalidateSize(), 0);
+}
+
+function render() {
+  if (mapInstance) { mapInstance.remove(); mapInstance = null; pinLayer = null; }
+  const date = DATA.days[day];
+  menu.forEach(button => {
+    const active = button.dataset.view === view;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+
+  if (view === 'schedule') {
+    app.innerHTML = renderSchedule(date);
+    initMap();
+  } else if (view === 'events') {
+    app.innerHTML = renderEvents();
+  } else {
+    app.innerHTML = renderOverview();
+  }
+
+  dates.hidden = view !== 'schedule';
+  dates.innerHTML = dates.hidden ? '' : tabs();
+  dates.querySelectorAll('[data-day]').forEach(button => {
+    button.onclick = () => {
+      day = Number(button.dataset.day);
+      render();
+      dates.querySelector(`[data-day="${day}"]`).focus({preventScroll:true});
+      app.scrollIntoView({block:'start'});
+    };
+  });
+}
+
+function openView(next) {
+  view = next;
+  render();
+  app.focus({preventScroll:true});
+  app.scrollIntoView({block:'start'});
+}
+document.querySelector('.jump').onclick = event => {
+  event.preventDefault();
+  openView('schedule');
+};
+menu.forEach(button => { button.onclick = () => openView(button.dataset.view); });
+render();
+</script></body></html>

@@ -1,6 +1,6 @@
 # 요나고 여행 플래너 — 날짜별 공유 핀
 
-이 폴더를 Git 저장소의 루트에 올린 뒤 Vercel에 연결합니다. `index.html`, `leaflet.js`, `leaflet.css`, `api/pins.js`, `package.json`을 함께 유지하세요.
+이 폴더를 Git 저장소의 루트에 올린 뒤 Vercel에 연결합니다. `index.html`, `cover.webp`, `leaflet.js`, `leaflet.css`, `api/pins.js`, `package.json`을 함께 유지하세요.
 
 ## Vercel 설정
 
