@@ -557,9 +557,11 @@ body{background:var(--paper)}
 .map-legend a:hover{color:#2d4ca0}
 .stop-place{margin:0 20px 24px 152px;overflow:hidden;border:1px solid var(--rule);border-radius:10px;background:#f8f8f2}
 .stop-place-visuals{display:grid;grid-template-columns:1fr 1fr;min-height:210px}
-.stop-place-photo{position:relative;margin:0;overflow:hidden}
-.stop-place-photo img{display:block;width:100%;height:100%;max-height:280px;object-fit:cover}
-.stop-place-photo-note{position:absolute;left:12px;bottom:12px;padding:6px 9px;border-radius:5px;background:rgba(28,32,31,.82);color:#f8f8f2;font-size:11px;font-weight:700}
+.stop-place-photo{position:relative;display:flex;flex-direction:column;margin:0;overflow:hidden}
+.stop-place-photo img{display:block;flex:1;width:100%;height:210px;min-height:210px;max-height:280px;object-fit:cover}
+.stop-place-photo-note{position:absolute;left:12px;top:12px;padding:6px 9px;border-radius:5px;background:rgba(28,32,31,.82);color:#f8f8f2;font-size:11px;font-weight:700}
+.stop-place-credit{display:flex;flex-wrap:wrap;gap:4px 8px;padding:8px 12px;background:#eef0e8;color:#4d554b;font-size:11px;line-height:1.4}
+.stop-place-credit a{color:#2d4ca0;text-decoration:underline;text-underline-offset:2px}
 .stop-place-map{position:relative;overflow:hidden;background:#e5e9e5;border-left:1px solid var(--rule)}
 .stop-place-map svg{display:block;width:100%;height:100%;min-height:210px;aspect-ratio:12/7}
 .stop-place-map .map-attribution{position:absolute;right:5px;bottom:4px}
@@ -570,7 +572,7 @@ body{background:var(--paper)}
 .footer a{color:inherit;text-underline-offset:2px}
 .photo-credits{text-align:right}.photo-credits summary{cursor:pointer;list-style:none;text-decoration:underline;text-underline-offset:3px}.photo-credits summary::-webkit-details-marker{display:none}.photo-credits ul{list-style:none;margin:12px 0 0;padding:0;line-height:1.7}.photo-credits p{margin:8px 0 0;line-height:1.6}
 @media(max-width:700px){.photo-credits{text-align:left}}
-@media(max-width:700px){.stop-place{margin:0 0 18px}.stop-place-visuals{grid-template-columns:1fr}.stop-place-photo img{height:190px}.stop-place-map{border-left:0;border-top:1px solid var(--rule)}.stop-place-map svg{min-height:190px}.stop-place-meta{align-items:flex-start;flex-direction:column}}
+@media(max-width:700px){.stop-place{margin:0 0 18px}.stop-place-visuals{grid-template-columns:1fr}.stop-place-photo img{height:190px;min-height:190px}.stop-place-map{border-left:0;border-top:1px solid var(--rule)}.stop-place-map svg{min-height:190px}.stop-place-meta{align-items:flex-start;flex-direction:column}}
 @media(max-width:700px){.route-paper.geo-map.map-tiles{aspect-ratio:12/7}}
 .slot-fact ul{margin:8px 0 12px;padding-left:18px}.slot-fact li{margin:5px 0;line-height:1.65}
 .slot-fact-links{display:flex;flex-wrap:wrap;gap:8px 20px}
@@ -701,12 +703,12 @@ const mapHighlights = [
 ];
 const stopPlaceNames = [{6:'요나고 판타지아'},{9:'마치나카 크리스털',10:'요나고 판타지아',11:'마치나카 크리스털'},{2:'이즈모타이샤',4:'이나사 해변·벤텐지마'},{3:'요괴 신사',9:'돗토리 하나카이로'},{}];
 const placePhotos = {
-  '요나고 판타지아':{src:'assets/img/yonago-fantasia-illumination.jpg',alt:'이전 개최 때 촬영한 요나고 판타지아의 푸른 조명과 백조 조형물',width:1200,height:800,previous:true},
-  '마치나카 크리스털':{src:'assets/img/machinaka-crystal-illumination.jpg',alt:'이전 개최 때 촬영한 마치나카 크리스털의 분홍색 하트 조명과 공회당',width:1200,height:899,previous:true},
-  '이즈모타이샤':{src:'assets/img/izumo-taisha.jpg',alt:'이즈모타이샤 가구라덴과 커다란 시메나와',width:1000,height:750},
-  '이나사 해변·벤텐지마':{src:'assets/img/inasa-bentenjima.jpg',alt:'이나사 해변의 모래사장과 바다 앞 벤텐지마',width:1200,height:901},
-  '요괴 신사':{src:'assets/img/yokai-shrine.jpg',alt:'미즈키 시게루 로드에 있는 요괴 신사 입구',width:900,height:675},
-  '돗토리 하나카이로':{src:'assets/img/hanakairo-winter-lights.webp',alt:'이전 개최 때 촬영한 돗토리 하나카이로의 보라색 조명 터널',width:1456,height:952,previous:true}
+  '요나고 판타지아':{src:'assets/img/yonago-fantasia-illumination.jpg',alt:'이전 개최 때 촬영한 요나고 판타지아의 푸른 조명과 백조 조형물',width:1200,height:800,previous:true,credit:'日刊Lazuda · 2020',source:'https://www.lazuda.com/news/archives/1714'},
+  '마치나카 크리스털':{src:'assets/img/machinaka-crystal-illumination.jpg',alt:'이전 개최 때 촬영한 마치나카 크리스털의 분홍색 하트 조명과 공회당',width:1200,height:899,previous:true,credit:'山陰のジロー · 2025',source:'https://note.com/duojiro/n/n2c0fdc038f19'},
+  '이즈모타이샤':{src:'assets/img/izumo-taisha.jpg',alt:'이즈모타이샤 가구라덴과 커다란 시메나와',width:1000,height:750,credit:'Naokijp',source:'https://commons.wikimedia.org/wiki/File:Izumo_Taisha_Kagura-den_Hall_001.jpg',license:'CC BY-SA 4.0',licenseUrl:'https://creativecommons.org/licenses/by-sa/4.0/'},
+  '이나사 해변·벤텐지마':{src:'assets/img/inasa-bentenjima.jpg',alt:'이나사 해변의 모래사장과 바다 앞 벤텐지마',width:1200,height:901,credit:'Qurren',source:'https://commons.wikimedia.org/wiki/File:Bentenjima_on_Inasa_Beach.jpg',license:'CC BY-SA 3.0',licenseUrl:'https://creativecommons.org/licenses/by-sa/3.0/'},
+  '요괴 신사':{src:'assets/img/yokai-shrine.jpg',alt:'미즈키 시게루 로드에 있는 요괴 신사 입구',width:900,height:675,credit:'おぉたむすねィく探検隊',source:'https://commons.wikimedia.org/wiki/File:%E5%A2%83%E6%B8%AF%E6%B0%B4%E6%9C%A8%E3%83%AD%E3%83%BC%E3%83%89%E5%A6%96%E6%80%AA%E7%A5%9E%E7%A4%BEPA098302.JPG',license:'CC BY-SA 3.0',licenseUrl:'https://creativecommons.org/licenses/by-sa/3.0/'},
+  '돗토리 하나카이로':{src:'assets/img/hanakairo-winter-lights.webp',alt:'이전 개최 때 촬영한 돗토리 하나카이로의 보라색 조명 터널',width:1456,height:952,previous:true,credit:'GOOD LUCK TRIP',source:'https://www.gltjp.com/en/directory/item/17669/'}
 };
 function placeMapUrl(place){return `https://www.google.com/maps/search/?api=1&query=${place.lat}%2C${place.lng}`;}
 function renderStopPlace(day,index){
@@ -721,7 +723,7 @@ function renderStopPlace(day,index){
   for(let ty=Math.floor(top/256);ty<=Math.floor((top+height)/256);ty++)for(let tx=Math.floor(left/256);tx<=Math.floor((left+width)/256);tx++){
     tiles+=`<image href="https://tile.openstreetmap.org/${zoom}/${tx}/${ty}.png" x="${Math.round(tx*256-left)}" y="${Math.round(ty*256-top)}" width="256" height="256"/>`;
   }
-  return `<div class="stop-place"><div class="stop-place-visuals"><figure class="stop-place-photo"><img src="${photo.src}" width="${photo.width}" height="${photo.height}" loading="lazy" decoding="async" alt="${esc(photo.alt)}">${photo.previous?'<span class="stop-place-photo-note">이전 개최 사진</span>':''}</figure><div class="stop-place-map"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(name)} 위치 지도">${tiles}<circle cx="240" cy="140" r="16" fill="#f8f8f2" stroke="#4469c5" stroke-width="4"/><circle cx="240" cy="140" r="6" fill="#4469c5"/></svg><span class="map-attribution">© OpenStreetMap contributors</span></div></div><div class="stop-place-meta"><span>${esc(place.address)}</span><a href="${placeMapUrl(place)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(name)} Google 지도에서 보기">Google 지도 ↗</a></div></div>`;
+  return `<div class="stop-place"><div class="stop-place-visuals"><figure class="stop-place-photo"><img src="${photo.src}" width="${photo.width}" height="${photo.height}" loading="lazy" decoding="async" alt="${esc(photo.alt)}">${photo.previous?'<span class="stop-place-photo-note">이전 개최 사진</span>':''}<figcaption class="stop-place-credit"><span>사진 출처</span><a href="${esc(photo.source)}" target="_blank" rel="noopener noreferrer">${esc(photo.credit)} ↗</a>${photo.licenseUrl?`<a href="${esc(photo.licenseUrl)}" target="_blank" rel="noopener noreferrer">${esc(photo.license)}</a><span>크기 조정</span>`:''}</figcaption></figure><div class="stop-place-map"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(name)} 위치 지도">${tiles}<circle cx="240" cy="140" r="16" fill="#f8f8f2" stroke="#4469c5" stroke-width="4"/><circle cx="240" cy="140" r="6" fill="#4469c5"/></svg><span class="map-attribution">© OpenStreetMap contributors</span></div></div><div class="stop-place-meta"><span>${esc(place.address)}</span><a href="${placeMapUrl(place)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(name)} Google 지도에서 보기">Google 지도 ↗</a></div></div>`;
 }
 const routeSketches = [
   {bounds:[133.20,133.39,35.40,35.52],points:[['요나고 공항',35.4922,133.2360],['요나고역',35.423,133.337],['루트인 요나고',35.430,133.339],['TSUTAYA',35.4463,133.3491],['LOFT',35.4405,133.3412],['이온 요나고역앞',35.4228,133.3329],['요나고 판타지아',35.422391,133.334057]]},
