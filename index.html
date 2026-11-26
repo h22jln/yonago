@@ -576,11 +576,22 @@ body{background:var(--paper)}
 @media(max-width:700px){.route-paper.geo-map.map-tiles{aspect-ratio:12/7}}
 .slot-fact ul{margin:8px 0 12px;padding-left:18px}.slot-fact li{margin:5px 0;line-height:1.65}
 .slot-fact-links{display:flex;flex-wrap:wrap;gap:8px 20px}
+.wish-list{max-width:920px}
+.wish-item{display:grid;grid-template-columns:160px minmax(0,1fr);gap:24px;padding:28px;border:1px solid var(--rule);border-radius:10px;background:#fbfaf6}
+.wish-number{font-size:72px;line-height:1;font-weight:750;letter-spacing:-.08em;color:var(--blue-dark)}
+.wish-number small{display:block;margin-top:12px;font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
+.wish-item h3{margin:0 0 8px;font-size:clamp(24px,3vw,36px);line-height:1.15;letter-spacing:-.05em}
+.wish-place{margin:0 0 16px;color:var(--muted);font-size:14px}
+.wish-note{margin:0 0 20px;padding-left:12px;border-left:2px solid var(--blue-dark);font-size:14px;line-height:1.6}
+.wish-links{display:flex;flex-wrap:wrap;gap:8px}
+.wish-links a{display:inline-flex;align-items:center;min-height:40px;padding:8px 12px;border:1px solid #b8c7e7;border-radius:7px;color:var(--blue-dark);font-size:12px;font-weight:700;text-decoration:none}
+.wish-links a:hover{background:#e8edfa}
+@media(max-width:700px){.wish-item{grid-template-columns:1fr;gap:16px;padding:20px}.wish-number{font-size:38px}.wish-number small{display:inline;margin-left:12px}.wish-links a{width:100%}.nav button{line-height:1.15;word-break:keep-all}}
 .stay-line{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}.day-banner .stay-line{font-size:13px;line-height:1.4}
 </style></head><body><a class="skip-link" href="#app">일정으로 바로 가기</a>
 <header class="site-head"><div class="shell top">
   <a class="brand" href="#cover" aria-label="요나고 플래너 표지">yonago<span>.note</span></a>
-  <nav class="nav" aria-label="여행 플래너 메뉴"><button type="button" data-view="schedule"><span>날짜별 일정</span></button><button type="button" data-view="events"><span>지역 이벤트</span></button><button type="button" data-view="overview"><span>전체 시간표</span></button></nav>
+  <nav class="nav" aria-label="여행 플래너 메뉴"><button type="button" data-view="schedule"><span>날짜별 일정</span></button><button type="button" data-view="events"><span>지역 이벤트</span></button><button type="button" data-view="overview"><span>전체 시간표</span></button><button type="button" data-view="wishlist"><span>가보고 싶은 곳</span></button></nav>
 </div></header>
 <div class="shell">
   <div class="date-dock" id="dates"></div>
@@ -694,6 +705,28 @@ function renderOverview() {
     <thead><tr><th scope="col">시간</th>${DATA.days.map(date => `<th scope="col">${esc(date.day)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
+const WISH_PLACES = [{
+  name: 'Ki-Re-i 증명사진기',
+  place: '이온 요나고역앞점 · 요나고역에서 도보 약 4분',
+  note: '두 지도 핀의 주소와 운영시간 표기가 다릅니다. 정확한 층과 이용 가능 시간은 방문할 때 확인하세요.',
+  links: [
+    {label: 'Yahoo 지도 · 24시간 표기', url: 'https://map.yahoo.co.jp/v3/place/pc0-wv9jqJ-'},
+    {label: 'Yahoo 지도 · 시설 영업시간 표기', url: 'https://map.yahoo.co.jp/v3/place/u0b5199jqJ-'}
+  ]
+}];
+
+function renderWishlist() {
+  return `${heading('가보고 싶은 곳')}
+    <div class="wish-list">${WISH_PLACES.map((place, index) => `
+      <article class="wish-item">
+        <div class="wish-number">${String(index + 1).padStart(2, '0')}<small>YONAGO</small></div>
+        <div><h3>${esc(place.name)}</h3><p class="wish-place">${esc(place.place)}</p>
+          <p class="wish-note">${esc(place.note)}</p>
+          <div class="wish-links">${place.links.map(link => `<a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer">${esc(link.label)} ↗</a>`).join('')}</div>
+        </div>
+      </article>`).join('')}</div>`;
+}
+
 const mapHighlights = [
   [{mapName:'요나고 판타지아',name:'요나고 판타지아',address:'요나고시 문화홀 다목적 광장 · 鳥取県米子市末広町293',lat:35.422391,lng:133.334057}],
   [{mapName:'마치나카 크리스털',name:'마치나카 크리스털',address:'요나고시 공회당 앞마당 · 鳥取県米子市角盤町2丁目61',lat:35.433268,lng:133.330639},{mapName:'요나고 판타지아',name:'요나고 판타지아',address:'요나고시 문화홀 다목적 광장 · 鳥取県米子市末広町293',lat:35.422391,lng:133.334057}],
@@ -804,8 +837,10 @@ function render() {
     initMap();
   } else if (view === 'events') {
     app.innerHTML = renderEvents();
-  } else {
+  } else if (view === 'overview') {
     app.innerHTML = renderOverview();
+  } else {
+    app.innerHTML = renderWishlist();
   }
 
   dates.hidden = view !== 'schedule';
