@@ -576,7 +576,7 @@ body{background:var(--paper)}
 @media(max-width:700px){.route-paper.geo-map.map-tiles{aspect-ratio:12/7}}
 .slot-fact ul{margin:8px 0 12px;padding-left:18px}.slot-fact li{margin:5px 0;line-height:1.65}
 .slot-fact-links{display:flex;flex-wrap:wrap;gap:8px 20px}
-.wish-list{max-width:920px}
+.wish-list{display:grid;gap:16px;max-width:920px}
 .wish-item{display:grid;grid-template-columns:160px minmax(0,1fr);gap:24px;padding:28px;border:1px solid var(--rule);border-radius:10px;background:#fbfaf6}
 .wish-number{font-size:72px;line-height:1;font-weight:750;letter-spacing:-.08em;color:var(--blue-dark)}
 .wish-number small{display:block;margin-top:12px;font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
@@ -712,6 +712,22 @@ const WISH_PLACES = [{
   links: [
     {label: 'Yahoo 지도 · 24시간 표기', url: 'https://map.yahoo.co.jp/v3/place/pc0-wv9jqJ-'},
     {label: 'Yahoo 지도 · 시설 영업시간 표기', url: 'https://map.yahoo.co.jp/v3/place/u0b5199jqJ-'}
+  ]
+}, {
+  name: '몰리 판타지 요나고역앞점',
+  place: '이온 요나고역앞점 3층 · 요나고역에서 도보 약 4분 · 10:00–21:00',
+  note: '프리쿠라 기종 후보: NANI STICKER, IDOLY Comeback Stage, Bloomit. 공식 매장 안내에는 기종 목록이 없어 방문 전 확인하세요.',
+  links: [
+    {label: '공식 매장 안내', url: 'https://www.fantasy.co.jp/shoplist/shop-3779/'},
+    {label: 'Google 지도', url: 'https://www.google.com/maps/search/?api=1&query=%E3%83%A2%E3%83%BC%E3%83%AA%E3%83%BC%E3%83%95%E3%82%A1%E3%83%B3%E3%82%BF%E3%82%B8%E3%83%BC%E7%B1%B3%E5%AD%90%E9%A7%85%E5%89%8D%E5%BA%97'}
+  ]
+}, {
+  name: '아피나 요나고점',
+  place: '메가돈키호테 요나고점 3층 · 고토역에서 도보 약 3분 · 10:00–21:00',
+  note: '공식 설치 목록: Bloomit, nico make, ハルイロセカイ2. 설치 기종은 매장 사정에 따라 달라질 수 있습니다.',
+  links: [
+    {label: '공식 매장·기종 안내', url: 'https://www.kyowa-corp.co.jp/am/shop/31-01'},
+    {label: 'Google 지도', url: 'https://www.google.com/maps/search/?api=1&query=%E3%82%A2%E3%83%94%E3%83%8A%E7%B1%B3%E5%AD%90%E5%BA%97'}
   ]
 }];
 
